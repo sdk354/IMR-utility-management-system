@@ -19,14 +19,18 @@ export default function Profile() {
   };
 
   return (
-    <div className="customer-bg">
+    <div style={{ background: "#F5F7FA", minHeight: "100vh", padding: "40px" }}>
       <div style={{ maxWidth: 820, margin: "0 auto" }}>
-        <div className="header">
-          <div className="title">My Profile</div>
-          <nav><Link to="/customer/dashboard" className="small link">Dashboard</Link></nav>
-        </div>
+        {/* Page header */}
+        <h1 style={{ marginBottom: "20px", color: "#ea580c" }}>My Profile</h1>
 
-        <div className="box">
+        {/* Card */}
+        <div style={{
+          background: "white",
+          padding: "25px",
+          borderRadius: "12px",
+          boxShadow: "0 5px 20px rgba(0,0,0,0.1)"
+        }}>
           <form onSubmit={handleSave}>
             <div className="form-row">
               <label>Name</label>
@@ -49,8 +53,24 @@ export default function Profile() {
             </div>
 
             <div style={{ display: "flex", gap: 8 }}>
-              <button className="btn btn-orange">Save changes</button>
-              <Link to="/customer/profile/password" className="small link">Change password</Link>
+              <button
+                type="submit"
+                style={{
+                  background: "#ea580c",
+                  color: "white",
+                  border: "none",
+                  borderRadius: 8,
+                  padding: "10px 16px",
+                  fontWeight: 600,
+                  cursor: "pointer"
+                }}
+              >
+                Save changes
+              </button>
+
+              <Link to="/customer/profile/password" className="small link" style={{ alignSelf: "center" }}>
+                Change password
+              </Link>
             </div>
 
             {saved && <div className="mt-2 small" style={{ color: "#059669" }}>Saved (mock)</div>}
