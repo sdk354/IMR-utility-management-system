@@ -1,0 +1,49 @@
+﻿version: '3.8'
+
+services:
+  # 1. Backend Service (Your Spring Boot App)
+  backend:
+    # Instruct Docker to build the image using the Dockerfile we created
+    build: .
+    # Map port 8080 inside the container to port 8080 on your machine
+    ports:
+      - "8080:8080"
+    # Wait for the database to be healthy before starting the backend
+    depends_on:
+      db:
+        condition: service_healthy
+    # Environment variables used by Spring Boot to connect to the DB
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:sqlserver://db:1433;databaseName=utilitydb;encrypt=false
+      SPRING_DATASOURCE_USERNAME: SA
+      SPRING_DATASOURCE_PASSWORD: yourStrongPassword123
+    networks:
+      - um_network
+
+  # 2. Database Service (SQL Server)
+  db:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    ports:
+      - "1433:1433"
+    environment:
+      ACCEPT_EULA: "Y"
+      SA_PASSWORD: "yourStrongPassword123" # !! Use the SAME password as in the backend environment above !!
+      MSSQL_PID: "Express" # Using the Express edition for development
+    volumes:
+      - sqlserver-data:/var/opt/mssql # Persist data outside the container
+    healthcheck: # Health check to ensure the DB is ready before the backend starts
+      test: ["CMD", "/opt/mssql-tools/bin/sqlcmd", "-S", "localhost", "-U", "SA", "-P", "yourStrongPassword123", "-Q", "select 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - um_network
+
+# Define volumes for data persistence
+volumes:
+  sqlserver-data:
+
+# Define a network for the services to communicate with each other
+networks:
+  um_network:
+    driver: bridge
