@@ -1,0 +1,173 @@
+:root {
+  --primary-orange: #ea580c;
+}
+
+/* MAIN LAYOUT */
+.dashboard-container {
+  display: flex;
+  background: #f4f6fb;
+  min-height: 100vh;
+}
+
+/* SIDEBAR */
+.sidebar {
+  width: 240px;
+  background: #0b1e39;
+  padding: 20px;
+  color: white;
+  display: flex;
+  flex-direction: column;
+}
+
+.portal-title {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 25px;
+}
+
+.sidebar-links {
+  list-style: none;
+  padding: 0;
+}
+
+.sidebar-links li {
+  margin: 15px 0;
+}
+
+.sidebar-links a {
+  text-decoration: none;
+  color: white;
+  font-size: 16px;
+}
+
+.sidebar-links a:hover {
+  color: var(--primary-orange);
+}
+
+.back-button {
+  margin-top: auto;
+  padding: 10px;
+  background: #09172e;
+  border-radius: 8px;
+  text-align: center;
+  color: white;
+  text-decoration: none;
+}
+
+/* MAIN AREA */
+.main-area {
+  flex: 1;
+  padding: 30px;
+}
+
+main h1 {
+  margin-bottom: 20px;
+}
+
+/* WELCOME BANNER */
+.welcome-card {
+  background: var(--primary-orange);
+  padding: 25px;
+  border-radius: 15px;
+  color: white;
+}
+
+.banner-buttons {
+  margin-top: 20px;
+  display: flex;
+  gap: 20px;
+}
+
+.banner-btn {
+  padding: 10px 20px;
+  background: #fff;
+  color: var(--primary-orange);
+  font-weight: bold;
+  border-radius: 8px;
+  text-decoration: none;
+}
+
+.banner-btn.orange {
+  background-color: var(--primary-orange);
+  color: white;
+}
+
+.banner-btn.orange:hover {
+  background-color: var(--primary-orange);
+}
+
+/* STATS */
+.stats-row {
+  margin-top: 25px;
+  display: flex;
+  gap: 20px;
+}
+
+.stat-card {
+  background: white;
+  padding: 20px;
+  flex: 1;
+  border-radius: 12px;
+}
+
+.stat-card h4 {
+  margin-bottom: 10px;
+}
+
+.small-text {
+  opacity: 0.7;
+}
+
+.green {
+  color: #17a34a;
+}
+
+.yellow-border {
+  border-left: 4px solid #e6b104;
+}
+
+.green-border {
+  border-left: 4px solid #16a34a;
+}
+
+/* GRAPH */
+.graph-card {
+  margin-top: 30px;
+  padding: 20px;
+  background: white;
+  border-radius: 12px;
+}
+
+.chart {
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+  height: 500px;
+  padding: 20px 0;
+}
+
+.bar-container {
+  text-align: center;
+}
+
+.bar {
+  width: 28px;
+  background: var(--primary-orange);
+  border-radius: 5px;
+}
+
+.bar-label {
+  margin-top: 8px;
+  display: inline-block;
+}
+
+/* ensure Profile save button class uses same orange */
+.btn-orange {
+  background: var(--primary-orange);
+  color: white;
+  border: none;
+}
+
+.btn-orange:hover {
+  background: var(--primary-orange);
+}
