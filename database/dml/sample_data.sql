@@ -1,28 +1,3 @@
-INSERT INTO Utility_Type (utilityName, unit, description)
-VALUES
-('Electricity', 'kWh', 'Electricity consumption'),
-('Water', 'm3', 'Water consumption'),
-('Gas', 'm3', 'Gas consumption'),
-('Internet', 'GB', 'Internet usage'),
-('Sewage', 'm3', 'Sewage services'),
-('Heating', 'kWh', 'Heating services'),
-('Cooling', 'kWh', 'Cooling services'),
-('Parking', 'Days', 'Parking fees'),
-('Trash', 'kg', 'Trash disposal'),
-('Maintenance', 'Service', 'Building maintenance');
-
-INSERT INTO Role (roleName, description)
-VALUES
-('Admin', 'System administrator'),
-('Customer', 'Regular customer'),
-('MeterReader', 'Records meter readings'),
-('Accountant', 'Manages billing'),
-('Support', 'Handles complaints'),
-('Manager', 'Manages operations'),
-('Supervisor', 'Supervises staff'),
-('Technician', 'Fixes meters'),
-('Auditor', 'Checks records'),
-('Guest', 'Temporary user');
 
 INSERT INTO [User] (username, passwordHash, email, contactNo, street, streetNo, city, roleID)
 VALUES
@@ -37,18 +12,6 @@ VALUES
 ('henry_moore', 'hash9', 'henry@example.com', '0759012345', 'Hilltop Road', '9', 'Ratnapura', 2),
 ('iris_wright', 'hash10', 'iris@example.com', '0760123456', 'Sunset Blvd', '11', 'Anuradhapura', 2);
 
-INSERT INTO Meter (serialNumber, utilityTypeID, customerID, installationDate, status)
-VALUES
-('ELEC001', 1, 1, '2025-01-01', 'Active'),
-('WATR001', 2, 2, '2025-01-02', 'Active'),
-('GAS001', 3, 3, '2025-01-03', 'Active'),
-('INT001', 4, 4, '2025-01-04', 'Active'),
-('SEW001', 5, 5, '2025-01-05', 'Active'),
-('HEAT001', 6, 6, '2025-01-06', 'Active'),
-('COOL001', 7, 7, '2025-01-07', 'Active'),
-('PARK001', 8, 8, '2025-01-08', 'Active'),
-('TRASH001', 9, 9, '2025-01-09', 'Active'),
-('MAINT001', 10, 10, '2025-01-10', 'Active');
 
 INSERT INTO Tariff (rate, effectiveFrom, effectiveTo, slabFrom, slabTo, fixedCharge, subsidiaryPercentage, utilityTypeID)
 VALUES
@@ -93,29 +56,14 @@ INSERT INTO Bill_Tariff (billID, tariffID)
 VALUES
 (1,1),(1,2),(2,1),(2,2),(3,3),(4,4),(5,5),(6,6),(7,7),(8,8);
 
-INSERT INTO Complaint (userID, meterID, complaintText)
-VALUES
-(1,1,'Meter not working'),
-(2,2,'High bill issue'),
-(3,3,'Leakage detected'),
-(4,4,'No reading recorded'),
-(5,5,'Meter broken'),
-(6,6,'Incorrect bill'),
-(7,7,'Low voltage'),
-(8,8,'Water leakage'),
-(9,9,'Gas smell'),
-(10,10,'Internet outage');
 
-INSERT INTO Payment (billID, userID, amount, paymentMethod, receiptNo)
-VALUES
-(1,1,500,'Card','REC001'),
-(2,2,700,'Cash','REC002'),
-(3,3,600,'Card','REC003'),
-(4,4,800,'Bank','REC004'),
-(5,5,450,'Cash','REC005'),
-(6,6,900,'Card','REC006'),
-(7,7,750,'Bank','REC007'),
-(8,8,650,'Cash','REC008'),
-(9,9,550,'Card','REC009'),
-(10,10,1000,'Bank','REC010');
+ALTER TABLE [User]
+ALTER COLUMN contactNo VARCHAR(15);
 
+
+ALTER TABLE [User]
+ALTER COLUMN streetNo VARCHAR(20);
+
+
+ALTER TABLE Bill
+ADD lateFee DECIMAL(12,2) DEFAULT 0;
