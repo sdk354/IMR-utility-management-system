@@ -13,6 +13,7 @@ public class BillingService {
 
     private final BillRepository billRepository;
 
+
     public BillingService(BillRepository billRepository) {
         this.billRepository = billRepository;
     }
@@ -45,16 +46,3 @@ public class BillingService {
         return billRepository.save(bill);
     }
 
-    /**
-     * Marks a bill as paid (This is typically called by PaymentService).
-     */
-    @Transactional
-    public void markBillAsPaid(Long billId) {
-        billRepository.findById(billId).ifPresent(bill -> {
-            bill.setPaid(true);
-            billRepository.save(bill);
-        });
-    }
-
-    // You could add methods here for calculating late fees, etc.
-}
