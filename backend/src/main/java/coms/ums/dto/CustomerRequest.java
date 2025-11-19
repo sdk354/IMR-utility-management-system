@@ -1,14 +1,20 @@
-﻿/*
-package coms.ums.dto;
+﻿package coms.ums.dto;
 
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
-public class */
-/**//*
-CustomerRequest {
-    @NotBlank private String username;
-    @Size(min = 6) private String password;
-    @Email private String email;
+public class CustomerRequest { // <-- This line was partially commented out or missing the class name
+
+    @NotBlank
+    private String username;
+
+    @Size(min = 6)
+    private String password;
+
+    @Email
+    private String email;
+
     private String contactNo;
     private String address;
     private String street;
@@ -16,6 +22,9 @@ CustomerRequest {
     private String city;
     private String status;
 
+    // Constructors (often omitted if using Lombok or default constructor)
+
+    // Getters and Setters
     public String getUsername() { return username; }
     public void setUsername(String username) { this.username = username; }
     public String getPassword() { return password; }
@@ -35,4 +44,3 @@ CustomerRequest {
     public String getStatus() { return status; }
     public void setStatus(String status) { this.status = status; }
 }
-*/

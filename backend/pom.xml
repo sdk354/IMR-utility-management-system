@@ -64,13 +64,6 @@
         <optional>true</optional>
     </dependency>
 
-    <!-- Microsoft SQL Server JDBC driver (use stable release available on Maven Central) -->
-    <dependency>
-        <groupId>com.microsoft.sqlserver</groupId>
-        <artifactId>mssql-jdbc</artifactId>
-        <version>12.2.0.jre17</version>
-    </dependency>
-    <!-- Commons CSV (parsing CSV) -->
     <dependency>
         <groupId>org.apache.commons</groupId>
         <artifactId>commons-csv</artifactId>
@@ -87,6 +80,13 @@
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-test</artifactId>
         <scope>test</scope>
+
     </dependency>
+    <dependency>
+        <groupId>org.postgresql</groupId>
+        <artifactId>postgresql</artifactId>
+        <scope>runtime</scope>
+    </dependency>
+
 </dependencies>
 </project>

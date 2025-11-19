@@ -1,4 +1,4 @@
-﻿package coms.ums.dto;
+package coms.ums.dto;
 
 import java.util.ArrayList;
 import java.util.List;
