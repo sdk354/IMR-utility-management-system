@@ -1,6 +1,6 @@
 import { NavLink, useNavigate } from 'react-router-dom';
 
-function Sidebar() {
+function Sidebar({ isCustomer = false }) {
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -9,47 +9,94 @@ function Sidebar() {
     }
   };
 
+  const sidebarClass = isCustomer ? 'customer-sidebar' : 'admin-sidebar';
+  const navClass = isCustomer ? 'customer-nav' : 'admin-nav';
+  const navLinkClass = isCustomer ? 'customer-nav-link' : 'admin-nav-link';
+  const navSectionClass = isCustomer ? 'customer-nav-section' : 'admin-nav-section';
+  const logoClass = isCustomer ? 'customer-logo' : 'admin-logo';
+  const iconClass = isCustomer ? 'customer-icon-lightning' : 'admin-icon-lightning';
+  const logoutBtnClass = isCustomer ? 'customer-logout-btn' : 'admin-logout-btn';
+  const iconArrowClass = isCustomer ? 'customer-icon-arrow' : 'admin-icon-arrow';
+  const portalTitle = isCustomer ? 'Customer Portal' : 'Admin Portal';
+  const basePath = isCustomer ? '/customer' : '/admin';
+
+  if (isCustomer) {
+    return (
+      <aside className={sidebarClass}>
+        <div className={logoClass}>
+          <span className={iconClass}></span>
+          <span>{portalTitle}</span>
+        </div>
+
+        <nav className={navClass}>
+          <div className={navSectionClass}>ACCOUNT</div>
+          <NavLink to={`${basePath}/dashboard`} className={navLinkClass}>
+            <span className="customer-icon-grid"></span> Dashboard
+          </NavLink>
+          <NavLink to={`${basePath}/bills`} className={navLinkClass}>
+            <span className="customer-icon-receipt"></span> My Bills
+          </NavLink>
+          <NavLink to={`${basePath}/payment`} className={navLinkClass}>
+            <span className="customer-icon-credit-card"></span> Payments
+          </NavLink>
+
+          <div className={navSectionClass}>SUPPORT</div>
+          <NavLink to={`${basePath}/support`} className={navLinkClass}>
+            <span className="customer-icon-message-alert"></span> Complaints
+          </NavLink>
+          <NavLink to={`${basePath}/profile`} className={navLinkClass}>
+            <span className="customer-icon-users"></span> Profile
+          </NavLink>
+        </nav>
+
+        <button onClick={handleLogout} className={logoutBtnClass}>
+          <span className={iconArrowClass}></span>Back to Portal Selection
+        </button>
+      </aside>
+    );
+  }
+
   return (
-    <aside className="admin-sidebar">
-      <div className="admin-logo">
-        <span className="admin-icon-lightning"></span>
-        <span>Admin Portal</span>
+    <aside className={sidebarClass}>
+      <div className={logoClass}>
+        <span className={iconClass}></span>
+        <span>{portalTitle}</span>
       </div>
 
-      <nav className="admin-nav">
-        <div className="admin-nav-section">MAIN</div>
-        <NavLink to="/admin/dashboard" className="admin-nav-link">
+      <nav className={navClass}>
+        <div className={navSectionClass}>MAIN</div>
+        <NavLink to={`${basePath}/dashboard`} className={navLinkClass}>
           <span className="admin-icon-grid"></span> Dashboard
         </NavLink>
 
-        <div className="admin-nav-section">MANAGEMENT</div>
-        <NavLink to="/admin/customers" className="admin-nav-link">
+        <div className={navSectionClass}>MANAGEMENT</div>
+        <NavLink to={`${basePath}/customers`} className={navLinkClass}>
           <span className="admin-icon-users"></span> Customers
         </NavLink>
-        <NavLink to="/admin/meters" className="admin-nav-link">
+        <NavLink to={`${basePath}/meters`} className={navLinkClass}>
           <span className="admin-icon-gauge"></span> Meters
         </NavLink>
-        <NavLink to="/admin/billing" className="admin-nav-link">
+        <NavLink to={`${basePath}/billing`} className={navLinkClass}>
           <span className="admin-icon-receipt"></span> Billing
         </NavLink>
-        <NavLink to="/admin/payments" className="admin-nav-link">
+        <NavLink to={`${basePath}/payments`} className={navLinkClass}>
           <span className="admin-icon-credit-card"></span> Payments
         </NavLink>
-        <NavLink to="/admin/tariffs" className="admin-nav-link">
+        <NavLink to={`${basePath}/tariffs`} className={navLinkClass}>
           <span className="admin-icon-tag"></span> Tariffs
         </NavLink>
-        <NavLink to="/admin/complaints" className="admin-nav-link">
+        <NavLink to={`${basePath}/complaints`} className={navLinkClass}>
           <span className="admin-icon-message-alert"></span> Complaints
         </NavLink>
 
-        <div className="admin-nav-section">ANALYTICS</div>
-        <NavLink to="/admin/reports" className="admin-nav-link">
+        <div className={navSectionClass}>ANALYTICS</div>
+        <NavLink to={`${basePath}/reports`} className={navLinkClass}>
           <span className="admin-icon-chart"></span> Reports
         </NavLink>
       </nav>
 
-      <button onClick={handleLogout} className="admin-logout-btn">
-        <span className="admin-icon-arrow"></span>Back to Portal Selection
+      <button onClick={handleLogout} className={logoutBtnClass}>
+        <span className={iconArrowClass}></span>Back to Portal Selection
       </button>
     </aside>
   );

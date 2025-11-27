@@ -1,160 +1,100 @@
+import { useState } from "react";
+
+const MOCK_TICKETS = [
+  { id: "TKT-001", subject: "Billing discrepancy", type: "Billing Issue", date: "2024-01-18", status: "In Progress" },
+  { id: "TKT-002", subject: "Meter reading question", type: "General Inquiry", date: "2024-01-10", status: "Resolved" },
+  { id: "TKT-003", subject: "Payment not received", type: "Payment Issue", date: "2024-01-05", status: "Resolved" },
+];
+
 function CustomerComplaints() {
+  const [form, setForm] = useState({ issueType: "", subject: "", description: "" });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setForm(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setForm({ issueType: "", subject: "", description: "" });
+  };
+
   return (
-    <div
-      style={{
-        background: "#F5F7FA",
-        minHeight: "100vh",
-        padding: "40px",
-      }}
-    >
-      {/* changed header color to unified orange */}
-      <h1 style={{ marginBottom: "20px", color: "#ea580c" }}>
-        Submit Support Request
-      </h1>
-
-      <div
-        style={{
-          background: "white",
-          padding: "25px",
-          borderRadius: "12px",
-          boxShadow: "0 5px 20px rgba(0,0,0,0.1)",
-          maxWidth: "700px",
-        }}
-      >
-        <h3 style={{ marginBottom: "20px", color: "#0C2D55" }}>
-          Support Form
-        </h3>
-
-        {/* added id and htmlFor for accessibility, defaultValue on select */}
-        <label htmlFor="issue-type" style={{ fontWeight: "500" }}>
-          Issue Type
-        </label>
-        <select
-          id="issue-type"
-          name="issueType"
-          defaultValue=""
-          aria-label="Issue Type"
-          style={{
-            width: "100%",
-            padding: "12px",
-            borderRadius: "8px",
-            border: "1px solid #ccc",
-            marginBottom: "15px",
-            marginTop: "5px",
-          }}
-        >
-          <option value="" disabled>
-            Select issue type...
-          </option>
-          <option>Billing Issue</option>
-          <option>Meter Reading</option>
-          <option>General Inquiry</option>
-        </select>
-
-        <label htmlFor="subject" style={{ fontWeight: "500" }}>
-          Subject
-        </label>
-        <input
-          id="subject"
-          type="text"
-          placeholder="Brief description of your issue"
-          aria-label="Subject"
-          style={{
-            width: "100%",
-            padding: "12px",
-            borderRadius: "8px",
-            border: "1px solid #ccc",
-            marginBottom: "15px",
-            marginTop: "5px",
-          }}
-        />
-
-        <label htmlFor="description" style={{ fontWeight: "500" }}>
-          Description
-        </label>
-        <textarea
-          id="description"
-          placeholder="Provide detailed information"
-          aria-label="Description"
-          style={{
-            width: "100%",
-            padding: "12px",
-            borderRadius: "8px",
-            border: "1px solid #ccc",
-            minHeight: "140px",
-            marginBottom: "15px",
-            marginTop: "5px",
-          }}
-        ></textarea>
-
-        {/* explicit button type */}
-        <button
-          type="button"
-          style={{
-            background: "#ea580c",
-            padding: "12px",
-            width: "150px",
-            color: "white",
-            border: "none",
-            borderRadius: "8px",
-            cursor: "pointer",
-            fontWeight: "600",
-          }}
-        >
-          Submit Request
-        </button>
+    <>
+      <div className="customer-page-header">
+        <h1 className="customer-section-title">Support Tickets</h1>
+        <div className="customer-page-actions">
+          <button className="customer-btn-secondary">Export</button>
+          <button className="customer-btn-primary">Print</button>
+        </div>
       </div>
 
-      {/* Support Tickets Table */}
-      <div
-        style={{
-          background: "white",
-          padding: "25px",
-          borderRadius: "12px",
-          boxShadow: "0 5px 20px rgba(0,0,0,0.1)",
-          maxWidth: "900px",
-          marginTop: "40px",
-        }}
-      >
-        <h3 style={{ marginBottom: "20px", color: "#0C2D55" }}>
-          My Support Tickets
-        </h3>
+      <div style={{ marginBottom: "2.5rem" }}>
+        <div className="customer-card">
+          <h3 style={{ marginBottom: "1.5rem", color: "#5d2e0f", borderBottom: "2px solid #f97316", paddingBottom: "0.75rem" }}>Submit Support Request</h3>
 
-        <table
-          style={{ width: "100%", borderCollapse: "collapse" }}
-          aria-label="Support tickets"
-        >
-          <thead>
-            <tr style={{ background: "#E8EEF3", textAlign: "left" }}>
-              <th style={{ padding: "12px" }}>Ticket ID</th>
-              <th style={{ padding: "12px" }}>Subject</th>
-              <th style={{ padding: "12px" }}>Type</th>
-              <th style={{ padding: "12px" }}>Date</th>
-              <th style={{ padding: "12px" }}>Status</th>
-            </tr>
+          <form onSubmit={handleSubmit} style={{ maxWidth: "600px" }}>
+            <div className="customer-form-group">
+              <label htmlFor="issue-type">Issue Type</label>
+              <select id="issue-type" name="issueType" value={form.issueType} onChange={handleChange} className="customer-select" defaultValue="">
+                <option value="" disabled>Select issue type...</option>
+                <option>Billing Issue</option>
+                <option>Meter Reading</option>
+                <option>General Inquiry</option>
+                <option>Payment Issue</option>
+                <option>Connection Problem</option>
+              </select>
+            </div>
 
-          </thead>
+            <div className="customer-form-group">
+              <label htmlFor="subject">Subject</label>
+              <input id="subject" type="text" name="subject" value={form.subject} onChange={handleChange} placeholder="Brief description of your issue" />
+            </div>
 
-          <tbody>
-            <tr>
-              <td style={{ padding: "12px" }}>TKT-001</td>
-              <td style={{ padding: "12px" }}>Billing discrepancy</td>
-              <td style={{ padding: "12px" }}>Billing Issue</td>
-              <td style={{ padding: "12px" }}>2024-01-18</td>
-              <td style={{ padding: "12px", color: "#E09E00" }}>In Progress</td>
-            </tr>
+            <div className="customer-form-group">
+              <label htmlFor="description">Description</label>
+              <textarea id="description" name="description" value={form.description} onChange={handleChange} placeholder="Provide detailed information about your issue" style={{ minHeight: "140px" }} ></textarea>
+            </div>
 
-            <tr>
-              <td style={{ padding: "12px" }}>TKT-002</td>
-              <td style={{ padding: "12px" }}>Meter reading question</td>
-              <td style={{ padding: "12px" }}>General Inquiry</td>
-              <td style={{ padding: "12px" }}>2024-01-10</td>
-              <td style={{ padding: "12px", color: "#11A763" }}>Resolved</td>
-            </tr>
-          </tbody>
-        </table>
+            <button type="submit" className="customer-btn-primary">Submit Request</button>
+          </form>
+        </div>
       </div>
-    </div>
+
+      <div>
+        <h3 style={{ marginBottom: "1.5rem", color: "#5d2e0f" }}>My Support Tickets</h3>
+        <div className="customer-table-container">
+          <table className="customer-table">
+            <thead>
+              <tr>
+                <th>Ticket ID</th>
+                <th>Subject</th>
+                <th>Type</th>
+                <th>Date</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {MOCK_TICKETS && MOCK_TICKETS.length > 0 ? (
+                MOCK_TICKETS.map(t => (
+                  <tr key={t.id}>
+                    <td><strong>{t.id}</strong></td>
+                    <td>{t.subject}</td>
+                    <td>{t.type}</td>
+                    <td>{t.date}</td>
+                    <td><span className={`customer-status ${t.status === "Resolved" ? "completed" : "pending"}`}>{t.status}</span></td>
+                    <td><a href="#" className="link" style={{ color: "#f97316", fontWeight: "600" }}>View</a></td>
+                  </tr>
+                ))
+              ) : (
+                <tr><td colSpan="6" style={{ textAlign: "center", padding: "2rem", color: "#a0714f" }}>No support tickets found</td></tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </>
   );
 }
 

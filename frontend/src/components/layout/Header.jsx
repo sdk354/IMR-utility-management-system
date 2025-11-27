@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 
-function Header({ title }) {
+function Header({ title, isCustomer = false }) {
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -9,14 +9,23 @@ function Header({ title }) {
     }
   };
 
+  const headerClass = isCustomer ? 'customer-header' : 'admin-header';
+  const titleClass = isCustomer ? 'customer-page-title' : 'admin-page-title';
+  const profileClass = isCustomer ? 'customer-user-profile' : 'admin-user-profile';
+  const avatarClass = isCustomer ? 'customer-user-avatar' : 'admin-user-avatar';
+  const nameClass = isCustomer ? 'customer-user-name' : 'admin-user-name';
+  const roleClass = isCustomer ? 'customer-user-role' : 'admin-user-role';
+  const roleText = isCustomer ? 'Customer' : 'Administrator';
+  const userInitials = isCustomer ? 'CU' : 'AD';
+
   return (
-    <header className="admin-header">
-      <h1 className="admin-page-title">{title}</h1>
-      <div className="admin-user-profile" onClick={handleLogout}>
-        <div className="admin-user-avatar">AD</div>
+    <header className={headerClass}>
+      <h1 className={titleClass}>{title}</h1>
+      <div className={profileClass} onClick={handleLogout}>
+        <div className={avatarClass}>{userInitials}</div>
         <div>
-          <div className="admin-user-name">Admin User</div>
-          <div className="admin-user-role">Administrator</div>
+          <div className={nameClass}>User</div>
+          <div className={roleClass}>{roleText}</div>
         </div>
       </div>
     </header>

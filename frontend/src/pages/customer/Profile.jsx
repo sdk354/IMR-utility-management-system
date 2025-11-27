@@ -13,70 +13,52 @@ export default function Profile() {
 
   const handleSave = (e) => {
     e.preventDefault();
-    // mock save - in real app call API
     setSaved(true);
     setTimeout(() => setSaved(false), 2000);
   };
 
   return (
-    <div style={{ background: "#F5F7FA", minHeight: "100vh", padding: "40px" }}>
-      <div style={{ maxWidth: 820, margin: "0 auto" }}>
-        {/* Page header */}
-        <h1 style={{ marginBottom: "20px", color: "#ea580c" }}>My Profile</h1>
+    <>
+      <div className="customer-page-header">
+        <h1 className="customer-section-title">My Profile</h1>
+        <div className="customer-page-actions">
+          <Link to="/customer/profile/password" className="customer-btn-secondary">Change Password</Link>
+          <button className="customer-btn-primary" onClick={handleSave}>Save Changes</button>
+        </div>
+      </div>
 
-        {/* Card */}
-        <div style={{
-          background: "white",
-          padding: "25px",
-          borderRadius: "12px",
-          boxShadow: "0 5px 20px rgba(0,0,0,0.1)"
-        }}>
+      <div style={{ maxWidth: "700px" }}>
+        <div className="customer-card">
+          <h3 style={{ marginBottom: "1.5rem", color: "#5d2e0f", borderBottom: "2px solid #f97316", paddingBottom: "0.75rem" }}>Personal Information</h3>
           <form onSubmit={handleSave}>
-            <div className="form-row">
+            <div className="customer-form-group">
               <label>Name</label>
               <input value={form.name} onChange={handleChange("name")} />
             </div>
 
-            <div className="form-row">
+            <div className="customer-form-group">
               <label>Email</label>
               <input value={form.email} onChange={handleChange("email")} type="email" />
             </div>
 
-            <div className="form-row">
+            <div className="customer-form-group">
               <label>Phone</label>
               <input value={form.phone} onChange={handleChange("phone")} />
             </div>
 
-            <div className="form-row">
+            <div className="customer-form-group">
               <label>Address</label>
-              <textarea value={form.address} onChange={handleChange("address")} />
+              <textarea value={form.address} onChange={handleChange("address")} style={{ minHeight: "100px" }} />
             </div>
 
-            <div style={{ display: "flex", gap: 8 }}>
-              <button
-                type="submit"
-                style={{
-                  background: "#ea580c",
-                  color: "white",
-                  border: "none",
-                  borderRadius: 8,
-                  padding: "10px 16px",
-                  fontWeight: 600,
-                  cursor: "pointer"
-                }}
-              >
-                Save changes
-              </button>
-
-              <Link to="/customer/profile/password" className="small link" style={{ alignSelf: "center" }}>
-                Change password
-              </Link>
-            </div>
-
-            {saved && <div className="mt-2 small" style={{ color: "#059669" }}>Saved (mock)</div>}
+            {saved && (
+              <div className="small" style={{ color: "#059669", fontWeight: "600", marginTop: "1rem" }}>
+                ✓ Changes saved
+              </div>
+            )}
           </form>
         </div>
       </div>
-    </div>
+    </>
   );
 }

@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 
 // Layout Components
 import AdminLayout from './components/layout/AdminLayout';
+import CustomerLayout from './components/layout/CustomerLayout';
 
 // Public Pages
 import Landing from './pages/Landing';
@@ -16,6 +17,8 @@ import CustomerDashboard from './pages/customer/Dashboard';
 import BillsList from './pages/customer/BillsList';
 import BillDetails from './pages/customer/BillDetails';
 import Profile from './pages/customer/Profile';
+import CustomerPayments from './pages/customer/Payments';
+import CustomerComplaints from './pages/customer/Complaints';
 
 // Admin Pages
 import Dashboard from './pages/admin/Dashboard';
@@ -45,11 +48,17 @@ function App() {
         <Route path="/customer/login" element={<CustomerLogin />} />
         <Route path="/admin/login" element={<AdminLogin />} />
 
-        {/* Customer Routes */}
-        <Route path="/customer/dashboard" element={<CustomerDashboard />} />
-        <Route path="/customer/bills" element={<BillsList />} />
-        <Route path="/customer/bills/:id" element={<BillDetails />} />
-        <Route path="/customer/profile" element={<Profile />} />
+        {/* Customer Routes - wrapped in CustomerLayout */}
+        <Route path="/customer" element={<CustomerLayout />}>
+          <Route path="dashboard" element={<CustomerDashboard />} />
+          <Route path="bills" element={<BillsList />} />
+          <Route path="bills/:id" element={<BillDetails />} />
+          <Route path="payment" element={<CustomerPayments />} />
+          <Route path="support" element={<CustomerComplaints />} />
+          <Route path="profile" element={<Profile />} />
+          {/* Default redirect for /customer to /customer/dashboard */}
+          <Route index element={<Navigate to="/customer/dashboard" replace />} />
+        </Route>
 
         {/* Admin Routes - wrapped in AdminLayout */}
         <Route path="/admin" element={<AdminLayout />}>
