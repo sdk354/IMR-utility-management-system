@@ -1,17 +1,28 @@
 import { Link } from "react-router-dom";
+import "../styles/globals.css";
 
 export default function Landing() {
-  return (
-    <div className="app-center">
-      <div className="card">
-        <h2 style={{ fontSize: 28, marginBottom: 8 }}>Utility Management System</h2>
-        <p className="small" style={{ marginBottom: 18 }}>Select a portal.</p>
+	return (
+		<div className="landing-wrapper">
+			<div className="landing-card">
+				<h1 className="landing-title">Utility Management System</h1>
+				<p className="landing-subtitle">
+					Choose your portal below.
+				</p>
 
-        <div style={{ display: "flex", gap: 14 }}>
-          <Link to="/customer/login" className="btn btn-orange" style={{ flex: 1 }}>Customer Login</Link>
-          <Link to="/admin/login" className="btn btn-blue" style={{ flex: 1 }}>Admin Login</Link>
-        </div>
-      </div>
-    </div>
-  );
+				<div className="landing-portal-grid">
+					<Link to="/customer/login" className="portal-btn portal-btn-orange">
+						Customer Portal
+					</Link>
+					<Link to="/admin/login" className="portal-btn portal-btn-blue">
+						Admin Portal
+					</Link>
+				</div>
+
+				<p className="landing-footer">
+					Secure access • Fast management • Customer‑first design
+				</p>
+			</div>
+		</div>
+	);
 }

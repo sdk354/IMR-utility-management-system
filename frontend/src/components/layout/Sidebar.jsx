@@ -88,11 +88,9 @@ function Sidebar({ isCustomer = false }) {
         <NavLink to={`${basePath}/complaints`} className={navLinkClass}>
           <span className="admin-icon-message-alert"></span> Complaints
         </NavLink>
-
-        <div className={navSectionClass}>ANALYTICS</div>
-        <NavLink to={`${basePath}/reports`} className={navLinkClass}>
-          <span className="admin-icon-chart"></span> Reports
-        </NavLink>
+	  	<NavLink to={`${basePath}/reports`} className={navLinkClass}>
+		  <span className="admin-icon-chart"></span> Reports
+	  	</NavLink>
       </nav>
 
       <button onClick={handleLogout} className={logoutBtnClass}>
