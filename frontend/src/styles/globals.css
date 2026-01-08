@@ -2,7 +2,6 @@
    COMMON STYLES (shared by admin + customer)
    ----------------------------------------------
    - Font, layout resets, base colors, spacing
-   - Keep this section for styles used everywhere
 ============================================== */
 :root {
   --font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -13,18 +12,19 @@
 
   /* Theme base colors */
   --admin-color: #1e3a8a;    /* Navy Blue */
-  --customer-color: #f59e0b; /* Amber Orange */
+  --customer-color: #800000; /* Maroon */
+  --customer-hover: #5a0000; /* Darker Maroon */
 
   /* Background */
   --bg-light: #f9fafb;
 
-  /* Font Sizes (Shared) */
-  --text-sm: 0.875rem;   /* 14px */
-  --text-base: 1rem;     /* 16px */
-  --text-lg: 1.125rem;   /* 18px */
-  --text-xl: 1.25rem;    /* 20px */
-  --text-2xl: 1.5rem;    /* 24px */
-  --text-3xl: 1.875rem;  /* 30px */
+  /* Font Sizes */
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.25rem;
+  --text-2xl: 1.5rem;
+  --text-3xl: 1.875rem;
 }
 
 * {
@@ -58,17 +58,11 @@ a {
   text-decoration: none;
 }
 
-/*For styles specific to admin or customer, 
- prefix class names with admin or customer */
-
 /* ==============================================
-   ADMIN PORTAL STYLES (use --admin-color)
+   ADMIN PORTAL STYLES
    ----------------------------------------------
-   Add all admin-side specific styles here
-
-   ex: .admin-sidebar
+   Blue Theme
 ============================================== */
-
 
 .admin-layout {
   display: flex;
@@ -76,7 +70,6 @@ a {
   background: #e9eff6;
 }
 
-/*sidebar*/
 .admin-sidebar {
   width: 260px;
   background: #152751;
@@ -89,6 +82,13 @@ a {
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  overflow-y: auto;
+  scrollbar-width: none; /* Firefox */
+}
+
+.admin-sidebar::-webkit-scrollbar {
+  width: 0px;
+  background: transparent;
 }
 
 .admin-logo {
@@ -116,6 +116,7 @@ a {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+  flex-grow: 1;
 }
 
 .admin-nav-section {
@@ -146,10 +147,11 @@ a {
   color: white;
 }
 
+/* Admin Icons */
 .admin-icon-grid { background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" fill="%23cbd5e1" viewBox="0 0 24 24"><path d="M4 8h4V4H4v4zm6 12h4v-4h-4v4zm-6 0h4v-4H4v4zm0-6h4v-4H4v4zm6 0h4v-4h-4v4zm6-10v4h4V4h-4zm-6 4h4V4h-4v4zm6 6h4v-4h-4v4zm0 6h4v-4h-4v4z"/></svg>'); }
 .admin-icon-users { background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" fill="%23cbd5e1" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>'); }
-.admin-icon-gauge {background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" fill="%23cbd5e1" viewBox="0 0 24 24"><path d="M12 2A10 10 0 1 0 22 12 10 10 0 0 0 12 2Zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8Zm0-14a6 6 0 0 0-6 6h2a4 4 0 0 1 8 0h2a6 6 0 0 0-6-6Zm-.5 6.5V7h1v5.5l3.5 2.1-.5.9Z"/></svg>');}
-.admin-icon-receipt {background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" fill="%23cbd5e1" viewBox="0 0 24 24"><path d="M21 2H3v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2zM8 4h8v2H8V4zm0 4h8v2H8V8zm0 4h5v2H8v-2z"/></svg>');}
+.admin-icon-gauge { background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" fill="%23cbd5e1" viewBox="0 0 24 24"><path d="M12 2A10 10 0 1 0 22 12 10 10 0 0 0 12 2Zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8Zm0-14a6 6 0 0 0-6 6h2a4 4 0 0 1 8 0h2a6 6 0 0 0-6-6Zm-.5 6.5V7h1v5.5l3.5 2.1-.5.9Z"/></svg>'); }
+.admin-icon-receipt { background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" fill="%23cbd5e1" viewBox="0 0 24 24"><path d="M21 2H3v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2zM8 4h8v2H8V4zm0 4h8v2H8V8zm0 4h5v2H8v-2z"/></svg>'); }
 .admin-icon-credit-card { background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" fill="%23cbd5e1" viewBox="0 0 24 24"><path d="M20 4H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z"/></svg>'); }
 .admin-icon-tag { background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" fill="%23cbd5e1" viewBox="0 0 24 24"><path d="M17.63 5.84C17.27 5.33 16.67 5 16 5L5 5.01C3.9 5.01 3 5.9 3 7v10c0 1.1.9 1.99 2 1.99L16 19c.67 0 1.27-.33 1.63-.84L22 12l-4.37-6.16z"/></svg>'); }
 .admin-icon-message-alert { background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" fill="%23cbd5e1" viewBox="0 0 24 24"><path d="M13 14h-2V9h2v5zm0 4h-2v-2h2v2zM1 21h22L12 2 1 21z"/></svg>'); }
@@ -181,21 +183,11 @@ a {
   filter: brightness(0) invert(1);
 }
 
-.admin-icon-arrow {
-  width: 20px;
-  height: 20px;
-  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" fill="%23cbd5e1" viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>');
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center;
-}
-
 .admin-main {
   flex: 1;
   margin-left: 260px;
 }
 
-/*Header*/
 .admin-header {
   background: linear-gradient(to right, #152751, #2e5aa1);
   padding: 1rem 2rem;
@@ -226,7 +218,6 @@ a {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 1.5rem;
-  
 }
 
 .admin-page-actions {
@@ -265,6 +256,7 @@ a {
   background: #b8d0e7;
 }
 
+/* Admin Tables */
 .admin-table-container {
   background: rgb(255, 255, 255);
   border-radius: 12px;
@@ -301,21 +293,11 @@ a {
   font-weight: 500;
 }
 
-.admin-status.completed {
-  background: #d1fae5;
-  color: #065f46;
-}
+.admin-status.completed { background: #d1fae5; color: #065f46; }
+.admin-status.pending { background: #fef3c7; color: #92400e; }
+.admin-status.incompleted { background: #f892b4; color: #bd031f; }
 
-.admin-status.pending {
-  background: #fef3c7;
-  color: #92400e;
-}
-
-.admin-status.incompleted {
-  background: #f892b4;
-  color: #bd031f;
-}
-/*reports page*/
+/* Admin Reports */
 .admin-reports-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -366,13 +348,6 @@ a {
   color: #1f2937;
 }
 
-.customer-section-title {
-  font-size: 1.25rem;
-  font-weight: 600;
-  margin-bottom: 1.5rem;
-  color: #5d2e0f;
-}
-
 .admin-reports-form {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -420,7 +395,7 @@ a {
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
-/*dashboard page*/
+/* Admin Dashboard */
 .admin-dashboard-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -473,7 +448,7 @@ a {
 .admin-summary-change.up   { color: #059669; }
 .admin-summary-change.down { color: #dc2626; }
 
-/* Icons in summary cards */
+/* Admin Dashboard Icons */
 .icon-users,
 .icon-gauge,
 .icon-money,
@@ -490,7 +465,6 @@ a {
 .icon-money      { background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" fill="%23f97316" viewBox="0 0 24 24"><path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.82-.92-2.92-2.22h-2.2c.11 2.34 1.91 3.64 4.26 4.01V21h3v-2.15c1.94-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-6.7-4.4z"/></svg>'); }
 .icon-collection { background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" fill="%230d9488" viewBox="0 0 24 24"><path d="M7 8h10v2H7zm0 4h7v2H7zm0 4h10v2H7z"/></svg>'); }
 
-/* Chart Placeholder */
 .admin-card-header {
   display: flex;
   justify-content: space-between;
@@ -596,14 +570,8 @@ a {
   background-repeat: no-repeat;
 }
 
-.icon-plus           { background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>'); }
-.admin-icon-gauge {background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" fill="%23cbd5e1" viewBox="0 0 24 24"><path d="M12 2A10 10 0 1 0 22 12 10 10 0 0 0 12 2Zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8Zm0-14a6 6 0 0 0-6 6h2a4 4 0 0 1 8 0h2a6 6 0 0 0-6-6Zm-.5 6.5V7h1v5.5l3.5 2.1-.5.9Z"/></svg>');}
-.icon-credit-card {background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 24 24"><path d="M20 4H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z"/></svg>');}
-.icon-tag {background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 24 24"><path d="M17.63 5.84C17.27 5.33 16.67 5 16 5L5 5.01C3.9 5.01 3 5.9 3 7v10c0 1.1.9 1.99 2 1.99L16 19c.67 0 1.27-.33 1.63-.84L22 12l-4.37-6.16z"/></svg>');}
-.icon-message-alert {background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 24 24"><path d="M13 14h-2V9h2v5zm0 4h-2v-2h2v2zM1 21h22L12 2 1 21z"/></svg>');}
-.icon-chart {background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-9 14l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>');}
+.icon-plus { background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>'); }
 
-/* addeditcustomer.jsx*/
 .admin-form-container {
   background: white;
   width: 75%;
@@ -642,23 +610,92 @@ a {
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
+.admin-logout-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  padding: 0.9rem 1rem;
+  border: none;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  background: linear-gradient(135deg, #2e5aa1, #1e3a8a);
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  margin-top: auto;
+  align-self: stretch;
+}
+
+.admin-logout-btn:hover {
+  background: linear-gradient(135deg, #2563eb, #1e40af);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+}
+
+.admin-logout-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+}
+
+.admin-user-profile {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  cursor: pointer;
+  padding: 0.5rem 0.75rem;
+  border-radius: 8px;
+  transition: background 0.2s ease;
+}
+
+.admin-user-profile:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.admin-user-avatar {
+  width: 40px;
+  height: 40px;
+  background: #ffffff;
+  color: #1e3a8a;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 0.875rem;
+}
+
+.admin-user-name {
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: #ffffff;
+}
+
+.admin-user-role {
+  font-size: 0.8rem;
+  color: #e2e8f0;
+}
+
 /* ==============================================
    CUSTOMER PORTAL STYLES (use --customer-color)
    ----------------------------------------------
-   Orange theme for customer portal matching admin layout structure
+   Maroon theme for customer portal matching admin layout structure
 ============================================== */
 
 /* Customer Layout Wrapper */
 .customer-layout {
   display: flex;
   min-height: 100vh;
-  background: #faf6f3;
+  background: #fffafa; /* Very light pinkish-white */
 }
 
 /* Customer Sidebar */
 .customer-sidebar {
   width: 260px;
-  background: #5d2e0f;
+  background: #4a0404; /* Deep Wine/Maroon */
   color: white;
   padding: 1.5rem 1rem;
   position: fixed;
@@ -668,6 +705,13 @@ a {
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+
+.customer-sidebar::-webkit-scrollbar {
+  width: 0px;
+  background: transparent;
 }
 
 .customer-logo {
@@ -683,7 +727,7 @@ a {
 .customer-icon-lightning {
   width: 40px;
   height: 40px;
-  background: #f97316;
+  background: #800000; /* Standard Maroon */
   border-radius: 8px;
   background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 24 24"><path d="M13 3L4 14h7v7l9-11h-7z"/></svg>');
   background-size: 18px;
@@ -695,10 +739,11 @@ a {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+  flex-grow: 1;
 }
 
 .customer-nav-section {
-  color: #d1b5a0;
+  color: #dcbab5; /* Dusty pink text for section headers */
   font-size: 0.75rem;
   font-weight: 600;
   text-transform: uppercase;
@@ -711,7 +756,7 @@ a {
   align-items: center;
   gap: 0.75rem;
   padding: 0.75rem 1rem;
-  color: #e8d4c4;
+  color: #ebd5d5; /* Pale pink text */
   text-decoration: none;
   border-radius: 8px;
   margin: 0 0.5rem;
@@ -721,17 +766,17 @@ a {
 
 .customer-nav-link:hover,
 .customer-nav-link.active {
-  background: #8b4513;
+  background: #6b0f0f; /* Darker maroon for active/hover */
   color: white;
 }
 
-/* Customer Icons */
-.customer-icon-grid { background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" fill="%23e8d4c4" viewBox="0 0 24 24"><path d="M4 8h4V4H4v4zm6 12h4v-4h-4v4zm-6 0h4v-4H4v4zm0-6h4v-4H4v4zm6 0h4v-4h-4v4zm6-10v4h4V4h-4zm-6 4h4V4h-4v4zm6 6h4v-4h-4v4zm0 6h4v-4h-4v4z"/></svg>'); }
-.customer-icon-users { background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" fill="%23e8d4c4" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>'); }
-.customer-icon-gauge { background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" fill="%23e8d4c4" viewBox="0 0 24 24"><path d="M12 2A10 10 0 1 0 22 12 10 10 0 0 0 12 2Zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8Zm0-14a6 6 0 0 0-6 6h2a4 4 0 0 1 8 0h2a6 6 0 0 0-6-6Zm-.5 6.5V7h1v5.5l3.5 2.1-.5.9Z"/></svg>'); }
-.customer-icon-receipt { background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" fill="%23e8d4c4" viewBox="0 0 24 24"><path d="M21 2H3v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2zM8 4h8v2H8V4zm0 4h8v2H8V8zm0 4h5v2H8v-2z"/></svg>'); }
-.customer-icon-credit-card { background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" fill="%23e8d4c4" viewBox="0 0 24 24"><path d="M20 4H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z"/></svg>'); }
-.customer-icon-message-alert { background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" fill="%23e8d4c4" viewBox="0 0 24 24"><path d="M13 14h-2V9h2v5zm0 4h-2v-2h2v2zM1 21h22L12 2 1 21z"/></svg>'); }
+/* Customer Icons - Updated fill color to %23ebd5d5 (Pale Pink) */
+.customer-icon-grid { background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" fill="%23ebd5d5" viewBox="0 0 24 24"><path d="M4 8h4V4H4v4zm6 12h4v-4h-4v4zm-6 0h4v-4H4v4zm0-6h4v-4H4v4zm6 0h4v-4h-4v4zm6-10v4h4V4h-4zm-6 4h4V4h-4v4zm6 6h4v-4h-4v4zm0 6h4v-4h-4v4z"/></svg>'); }
+.customer-icon-users { background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" fill="%23ebd5d5" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>'); }
+.customer-icon-gauge { background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" fill="%23ebd5d5" viewBox="0 0 24 24"><path d="M12 2A10 10 0 1 0 22 12 10 10 0 0 0 12 2Zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8Zm0-14a6 6 0 0 0-6 6h2a4 4 0 0 1 8 0h2a6 6 0 0 0-6-6Zm-.5 6.5V7h1v5.5l3.5 2.1-.5.9Z"/></svg>'); }
+.customer-icon-receipt { background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" fill="%23ebd5d5" viewBox="0 0 24 24"><path d="M21 2H3v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2zM8 4h8v2H8V4zm0 4h8v2H8V8zm0 4h5v2H8v-2z"/></svg>'); }
+.customer-icon-credit-card { background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" fill="%23ebd5d5" viewBox="0 0 24 24"><path d="M20 4H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z"/></svg>'); }
+.customer-icon-message-alert { background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" fill="%23ebd5d5" viewBox="0 0 24 24"><path d="M13 14h-2V9h2v5zm0 4h-2v-2h2v2zM1 21h22L12 2 1 21z"/></svg>'); }
 
 .customer-icon-grid,
 .customer-icon-users,
@@ -758,7 +803,8 @@ a {
 .customer-icon-arrow {
   width: 20px;
   height: 20px;
-  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" fill="%23e8d4c4" viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>');
+  /* Updated fill to pale pink */
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" fill="%23ebd5d5" viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>');
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
@@ -771,9 +817,9 @@ a {
 
 /* Customer Header */
 .customer-header {
-  background: linear-gradient(to right, #5d2e0f, #b45309);
+  background: linear-gradient(to right, #4a0404, #800000);
   padding: 1rem 2rem;
-  border-bottom: 1px solid #a16207;
+  border-bottom: 1px solid #770404;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -797,7 +843,7 @@ a {
 
 /* Customer Buttons */
 .customer-btn-primary {
-  background: #d97706;
+  background: #930000;
   color: white;
   border: none;
   padding: 0.6rem 1.2rem;
@@ -809,13 +855,13 @@ a {
 }
 
 .customer-btn-primary:hover {
-  background: #f97316;
+  background: #770404;
 }
 
 .customer-btn-secondary {
-  background: #f5e6d3;
-  color: #5d2e0f;
-  border: 1px solid #ffd4a8;
+  background: #fff0f0; /* Very pale pink background */
+  color: #800000;      /* Maroon Text */
+  border: 1px solid #e6b3b3; /* Soft Pink Border */
   padding: 0.6rem 1.2rem;
   border-radius: 8px;
   font-size: 0.95rem;
@@ -824,7 +870,7 @@ a {
 }
 
 .customer-btn-secondary:hover {
-  background: #ffc299;
+  background: #ffe0e0;
 }
 
 /* Customer Tables */
@@ -842,18 +888,18 @@ a {
 }
 
 .customer-table th {
-  background: #fff5f0;
+  background: #fff0f0; /* Pale Pink Header */
   padding: 0.75rem 1rem;
   text-align: left;
   font-weight: 600;
   font-size: 0.850rem;
-  color: #5d2e0f;
-  border-bottom: 1px solid #ffd4a8;
+  color: #4a0404; /* Dark Maroon Text */
+  border-bottom: 1px solid #e6b3b3; /* Soft Pink Border */
 }
 
 .customer-table td {
   padding: 0.75rem 1rem;
-  border-bottom: 1px solid #ffd4a8;
+  border-bottom: 1px solid #e6b3b3;
   font-size: 0.90rem;
 }
 
@@ -870,8 +916,8 @@ a {
 }
 
 .customer-status.pending {
-  background: #fed7aa;
-  color: #92400e;
+  background: #eddcd9; /* Dusty Rose/Beige instead of Orange */
+  color: #7f1d1d; /* Dark Red/Brown */
 }
 
 .customer-status.incompleted {
@@ -905,7 +951,7 @@ a {
   display: block;
   margin-bottom: 0.5rem;
   font-weight: 500;
-  color: #5d2e0f;
+  color: #4a0404; /* Dark Maroon */
   font-size: 0.95rem;
 }
 
@@ -914,11 +960,11 @@ a {
 .customer-form-group textarea {
   width: 100%;
   padding: 0.75rem 1rem;
-  border: 1.5px solid #ffd4a8;
+  border: 1.5px solid #e6b3b3; /* Soft Pink Border */
   border-radius: 8px;
   font-size: 1rem;
   background: white;
-  color: #5d2e0f;
+  color: #4a0404;
   transition: border 0.2s ease;
 }
 
@@ -926,20 +972,21 @@ a {
 .customer-form-group select:focus,
 .customer-form-group textarea:focus {
   outline: none;
-  border-color: #f97316;
-  box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.1);
+  border-color: #800000; /* Maroon Focus */
+  box-shadow: 0 0 0 3px rgba(128, 0, 0, 0.1);
 }
 
 .customer-select {
   width: 100%;
   padding: 0.75rem 1rem;
-  border: 1.5px solid #ffd4a8;
+  border: 1.5px solid #e6b3b3;
   border-radius: 8px;
   font-size: 1rem;
   background: white;
-  color: #5d2e0f;
+  color: #4a0404;
   appearance: none;
-  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" fill="%235d2e0f" viewBox="0 0 20 20"><path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>');
+  /* Updated arrow fill to Maroon */
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" fill="%23800000" viewBox="0 0 20 20"><path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>');
   background-repeat: no-repeat;
   background-position: right 1rem center;
   background-size: 12px;
@@ -948,8 +995,8 @@ a {
 
 .customer-select:focus {
   outline: none;
-  border-color: #f97316;
-  box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.1);
+  border-color: #800000;
+  box-shadow: 0 0 0 3px rgba(128, 0, 0, 0.1);
 }
 
 /* Customer Summary Cards */
@@ -978,19 +1025,19 @@ a {
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  background: #fed7aa;
+  background: #f2d4d4; /* Light Maroon/Pink BG */
 }
 
 .customer-summary-title {
   font-size: 0.875rem;
-  color: #a0714f;
+  color: #994d4d; /* Muted Maroon */
   margin-bottom: 0.25rem;
 }
 
 .customer-summary-value {
   font-size: 1.75rem;
   font-weight: 700;
-  color: #5d2e0f;
+  color: #4a0404;
 }
 
 .customer-summary-change {
@@ -1014,12 +1061,88 @@ a {
   gap: 0.75rem;
 }
 
+.customer-logout-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  padding: 0.9rem 1rem;
+  border: none;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  background: linear-gradient(135deg, #800000, #4a0404);
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  margin-top: auto;
+  align-self: stretch;
+}
+
+.customer-logout-btn:hover {
+  background: linear-gradient(135deg, #930000, #5a0000);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+}
+
+.customer-logout-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+}
+
+.customer-user-profile {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  cursor: pointer;
+  padding: 0.5rem 0.75rem;
+  border-radius: 8px;
+  transition: background 0.2s ease;
+}
+
+.customer-user-profile:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.customer-user-avatar {
+  width: 40px;
+  height: 40px;
+  background: #ffffff;
+  color: #800000;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 0.875rem;
+}
+
+.customer-user-name {
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: #ffffff;
+}
+
+.customer-user-role {
+  font-size: 0.8rem;
+  color: #e2e8f0;
+}
+
+.customer-section-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  color: #5d2e0f;
+}
+
 /* Utilities */
 .small { font-size: 13px; color: #6b7280; }
 .mt-2 { margin-top: 8px; }
 .mt-4 { margin-top: 16px; }
-.text-orange { color: #c2410c; }
-.link { color: #f97316; text-decoration: none; font-weight: 600; }
+.text-orange { color: #800000; } /* Renamed to Maroon color, kept class name for compatibility */
+.link { color: #800000; text-decoration: none; font-weight: 600; }
 .center { text-align: center; }
 
 /* Portal selection and other components */
@@ -1049,170 +1172,30 @@ a {
   font-weight: 600;
   text-align: center;
 }
-.btn-orange { background: #f97316; }
+
+/* Legacy .btn-orange mapped to Maroon */
+.btn-orange { background: #800000; }
+.btn-orange:hover { background: #5a0000; }
+
 .btn-blue { background: #1e90ff; }
 
-.btn-orange:hover {
-  background: #ea580c;
-}
-
-/* Legacy customer styles maintained for backward compatibility */
+/* Legacy customer styles maintained/updated */
 .customer-bg {
   min-height: 100vh;
-  background: linear-gradient(180deg,#fff6f0, #fff);
+  background: linear-gradient(180deg,#fff0f0, #fff); /* Updated to light pink gradient */
   padding: 28px 18px;
 }
 
-.admin-nav, .customer-nav {
-  flex-grow: 1;
-  overflow-y: auto;
-}
-
-.admin-logout-btn,
-.customer-logout-btn {
-  margin-top: auto;
-  align-self: stretch;
-}
-
-.admin-logout-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  width: 100%;
-  padding: 0.9rem 1rem;
-  border: none;
-  border-radius: 10px;
-  font-size: 1rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.25s ease;
-  background: linear-gradient(135deg, #2e5aa1, #1e3a8a);
-  color: #ffffff;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-}
-
-.admin-logout-btn:hover {
-  background: linear-gradient(135deg, #2563eb, #1e40af);
-  transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(0,0,0,0.2);
-}
-
-.admin-logout-btn:active {
-  transform: translateY(0);
-  box-shadow: 0 3px 8px rgba(0,0,0,0.1);
-}
-
-.customer-logout-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  width: 100%;
-  padding: 0.9rem 1rem;
-  border: none;
-  border-radius: 10px;
-  font-size: 1rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.25s ease;
-  background: linear-gradient(135deg, #f59e0b, #d97706);
-  color: #ffffff;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-}
-
-.customer-logout-btn:hover {
-  background: linear-gradient(135deg, #f97316, #c2410c);
-  transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(0,0,0,0.2);
-}
-
-.customer-logout-btn:active {
-  transform: translateY(0);
-  box-shadow: 0 3px 8px rgba(0,0,0,0.1);
-}
-
-.admin-user-profile,
-.customer-user-profile {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  cursor: pointer;
-  padding: 0.5rem 0.75rem;
-  border-radius: 8px;
-  transition: background 0.2s ease;
-}
-
-.admin-user-profile:hover {
-  background: rgba(255, 255, 255, 0.2);
-}
-
-.customer-user-profile:hover {
-  background: rgba(255, 255, 255, 0.2);
-}
-
-.admin-user-avatar {
-  width: 40px;
-  height: 40px;
-  background: #ffffff;
-  color: #1e3a8a;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: bold;
-  font-size: 0.875rem;
-}
-
-.customer-user-avatar {
-  width: 40px;
-  height: 40px;
-  background: #ffffff;
-  color: #d97706;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: bold;
-  font-size: 0.875rem;
-}
-
-.admin-user-name,
-.customer-user-name {
-  font-weight: 600;
-  font-size: 0.95rem;
-  color: #ffffff;
-}
-
-.admin-user-role,
-.customer-user-role {
-  font-size: 0.8rem;
-  color: #e2e8f0;
-}
-
-.admin-sidebar,
-.customer-sidebar {
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  overflow-y: auto;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-}
-
-.admin-sidebar::-webkit-scrollbar,
-.customer-sidebar::-webkit-scrollbar {
-  width: 0px;
-  height: 0px;
-  background: transparent;
-}
+/* ==============================================
+   LANDING PAGE STYLES
+============================================== */
 
 .landing-wrapper {
   min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #986306, #1e3a8a);
+  background: linear-gradient(135deg, #4a0404, #1e3a8a);
 }
 
 .landing-card {
@@ -1262,12 +1245,12 @@ a {
   transform: scale(1.03);
 }
 
-.portal-btn-orange {
-  background: #d97706;
+.portal-btn-maroon, .portal-btn-orange {
+  background: #800000;
 }
 
-.portal-btn-orange:hover {
-  background: #f97316;
+.portal-btn-maroon:hover, .portal-btn-orange:hover {
+  background: #930000;
 }
 
 .portal-btn-blue {

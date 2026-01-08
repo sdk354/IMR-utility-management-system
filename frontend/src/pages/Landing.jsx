@@ -11,7 +11,7 @@ export default function Landing() {
 				</p>
 
 				<div className="landing-portal-grid">
-					<Link to="/customer/login" className="portal-btn portal-btn-orange">
+					<Link to="/customer/login" className="portal-btn portal-btn-maroon">
 						Customer Portal
 					</Link>
 					<Link to="/admin/login" className="portal-btn portal-btn-blue">
