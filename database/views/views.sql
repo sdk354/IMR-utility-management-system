@@ -1,121 +1,136 @@
-GO
-CREATE VIEW get_UserInfo AS
-SELECT 
-    [User].userID,
-    [User].username,
-    [User].email,
-    [User].contactNo,
-    [User].street,
-    [User].streetNo,
-    [User].city,
-    [User].status,
-    Role.roleName
-FROM [User]
-JOIN Role 
-    ON [User].roleID = Role.roleID;
+-- Each view should be run separately, without GO, if not using SSMS or sqlcmd.
 
+CREATE OR ALTER VIEW get_UserInfo AS
+SELECT
+    u.userID,
+    u.username,
+    u.email,
+    u.contactNo,
+    u.street,
+    u.streetNo,
+    u.city,
+    u.status,
+    r.roleName
+FROM [User] u
+    JOIN Role r ON u.roleID = r.roleID;
 GO
 
 CREATE OR ALTER VIEW get_fulladdress AS
-SELECT 
-    [User].userID,
-    [User].username,
-    [User].email,
-    [User].contactNo,
-    ([User].streetNo + ' ' + [User].street + ', ' + [User].city) AS fullAddress,
-    [User].status,
-    Role.roleName
-FROM [User]
-JOIN Role 
-    ON [User].roleID = Role.roleID;
-
-GO
-
-CREATE VIEW get_Tariffs AS
 SELECT
-    Tariff.tariffID,
-    Utility_Type.utilityName,
-    Tariff.rate,
-    Tariff.effectiveFrom,
-    Tariff.effectiveTo,
-    Tariff.slabFrom,
-    Tariff.slabTo,
-    Tariff.fixedCharge,
-    Tariff.subsidiaryPercentage
-FROM Tariff
-JOIN Utility_Type 
-    ON Tariff.utilityTypeID = Utility_Type.utilityTypeID;
-
+    u.userID,
+    u.username,
+    u.email,
+    u.contactNo,
+    (u.streetNo + ' ' + u.street + ', ' + u.city) AS fullAddress,
+    u.status,
+    r.roleName
+FROM [User] u
+    JOIN Role r ON u.roleID = r.roleID;
 GO
 
-CREATE VIEW get_MeterReadings AS
+CREATE OR ALTER VIEW get_Tariffs AS
 SELECT
-    Meter_Reading.readingID,
-    Meter_Reading.readingValue,
-    Meter_Reading.readingDate,
-    Meter_Reading.remarks,
-    Meter.serialNumber AS meterSerial,
-    [User].username AS enteredBy
-FROM Meter_Reading
-JOIN Meter 
-    ON Meter_Reading.meterID = Meter.meterID
-LEFT JOIN [User] 
-    ON Meter_Reading.userID = [User].userID;
-
+    t.tariffID,
+    ut.utilityName,
+    t.rate,
+    t.effectiveFrom,
+    t.effectiveTo,
+    t.slabFrom,
+    t.slabTo,
+    t.fixedCharge,
+    t.subsidiaryPercentage
+FROM Tariff t
+         JOIN Utility_Type ut ON t.utilityTypeID = ut.utilityTypeID;
 GO
 
-CREATE VIEW get_Bills AS
+CREATE OR ALTER VIEW get_MeterReadings AS
 SELECT
-    Bill.billID,
-    [User].username AS customer,
-    Bill.totalAmount,
-    Bill.totalConsumption,
-    Bill.billingPeriodStart,
-    Bill.billingPeriodEnd,
-    Bill.billDate,
-    Bill.status,
-    Bill.dueDate
-FROM Bill
-JOIN [User] 
-    ON Bill.userID = [User].userID;
-
+    mr.readingID,
+    mr.readingValue,
+    mr.readingDate,
+    mr.remarks,
+    m.serialNumber AS meterSerial,
+    u.username AS enteredBy
+FROM Meter_Reading mr
+         JOIN Meter m ON mr.meterID = m.meterID
+         LEFT JOIN [User] u ON mr.userID = u.userID;
 GO
 
-CREATE VIEW get_BillTariffs AS
+CREATE OR ALTER VIEW get_Bills AS
 SELECT
-
-    Bill_Tariff.billTariffID,
-    Bill.billID,
-    [User].username AS customer,
-    Tariff.tariffID,
-    Utility_Type.utilityName,
-    Tariff.rate,
-    Tariff.fixedCharge,
-    Tariff.subsidiaryPercentage
-
-FROM Bill_Tariff
-JOIN Bill 
-    ON Bill_Tariff.billID = Bill.billID
-JOIN [User] 
-    ON Bill.userID = [User].userID
-JOIN Tariff 
-    ON Bill_Tariff.tariffID = Tariff.tariffID
-JOIN Utility_Type 
-    ON Tariff.utilityTypeID = Utility_Type.utilityTypeID;
-
+    b.billID,
+    u.username AS customer,
+    b.totalAmount,
+    b.totalConsumption,
+    b.billingPeriodStart,
+    b.billingPeriodEnd,
+    b.billDate,
+    b.status,
+    b.dueDate
+FROM Bill b
+         JOIN [User] u ON b.userID = u.userID;
 GO
-CREATE VIEW get_MonthlyRevenue AS
-SELECT 
 
+CREATE OR ALTER VIEW get_BillTariffs AS
+SELECT
+    bt.billTariffID,
+    b.billID,
+    u.username AS customer,
+    t.tariffID,
+    ut.utilityName,
+    t.rate,
+    t.fixedCharge,
+    t.subsidiaryPercentage
+FROM Bill_Tariff bt
+         JOIN Bill b ON bt.billID = b.billID
+         JOIN [User] u ON b.userID = u.userID
+    JOIN Tariff t ON bt.tariffID = t.tariffID
+    JOIN Utility_Type ut ON t.utilityTypeID = ut.utilityTypeID;
+GO
+
+CREATE OR ALTER VIEW get_MonthlyRevenue AS
+SELECT TOP 100 PERCENT
     YEAR(b.billDate) AS BillYear,
     MONTH(b.billDate) AS BillMonth,
-    u.utilityName,
+    ut.utilityName,
     SUM(b.totalAmount) AS TotalRevenue
-
 FROM Bill b
-JOIN Bill_Tariff bt ON b.billID = bt.billID
-JOIN Tariff t ON bt.tariffID = t.tariffID
-JOIN Utility_Type u ON t.utilityTypeID = u.utilityTypeID
-GROUP BY YEAR(b.billDate), MONTH(b.billDate), u.utilityName
-ORDER BY BillYear, BillMonth, u.utilityName;
+    JOIN Bill_Tariff bt ON b.billID = bt.billID
+    JOIN Tariff t ON bt.tariffID = t.tariffID
+    JOIN Utility_Type ut ON t.utilityTypeID = ut.utilityTypeID
+GROUP BY YEAR(b.billDate), MONTH(b.billDate), ut.utilityName
+ORDER BY YEAR(b.billDate), MONTH(b.billDate), ut.utilityName;
+GO
 
+CREATE OR ALTER VIEW MeterDetails AS
+SELECT
+    m.meterID,
+    m.serialNumber,
+    m.status,
+    ut.utilityName AS UtilityType,
+    m.installationDate
+FROM Meter m
+         JOIN Utility_Type ut ON m.utilityTypeID = ut.utilityTypeID;
+GO
+
+CREATE OR ALTER VIEW UserPayments AS
+SELECT
+    p.paymentID,
+    p.amount,
+    p.paymentDate,
+    p.paymentMethod,
+    p.receiptNo,
+    p.userID
+FROM Payment p;
+GO
+
+CREATE OR ALTER VIEW ComplaintSummary AS
+SELECT
+    c.complaintID,
+    c.complaintText,
+    c.status,
+    c.complaintDate,
+    c.userID,
+    c.meterID
+FROM Complaint c;
+GO
