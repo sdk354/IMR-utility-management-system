@@ -1,4 +1,4 @@
-CREATE DATABASE utility_management_system ; 
+CREATE DATABASE UtilityDB;
 CREATE TABLE Utility_Type (
     utilityTypeID INT IDENTITY(1,1) PRIMARY KEY,
     utilityName VARCHAR(100) NOT NULL UNIQUE,
