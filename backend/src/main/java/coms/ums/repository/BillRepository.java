@@ -12,4 +12,7 @@ public interface BillRepository extends JpaRepository<Bill, Long> {
 
     // Custom method to find bills that are due and unpaid
     List<Bill> findByIsPaidFalseAndDueDateBefore(java.time.LocalDate date);
+
+    @Procedure(procedureName = "CalculateMonthlyBills")
+    void triggerBillGenerationProcedure();
 }
