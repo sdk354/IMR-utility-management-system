@@ -33,6 +33,10 @@ public class BillingService {
         }
         return billRepository.save(bill);
     }
+    public void generateMonthlyBills() {
+        // This triggers the database logic as required by your task
+        billRepository.triggerBillGenerationProcedure();
+    }
 
     @Transactional
     public void markBillAsPaid(Long billId) {
