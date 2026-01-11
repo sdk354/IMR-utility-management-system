@@ -1,20 +1,26 @@
-﻿version: '3.8'
+﻿services:
+  # 0. Frontend Service
+  frontend:
+    build:
+      context: ./frontend        # Assumes your frontend code is in a folder named 'frontend'
+    ports:
+      - "3000:3000"              # Access your site at http://localhost:3000
+    depends_on:
+      - backend
+    networks:
+      - um_network
 
-services:
-  # 1. Backend Service (Your Spring Boot App)
+  # 1. Backend Service (Spring Boot)
   backend:
-    # Instruct Docker to build the image using the Dockerfile we created
-    build: .
-    # Map port 8080 inside the container to port 8080 on your machine
+    build:
+      context: ./backend
     ports:
       - "8080:8080"
-    # Wait for the database to be healthy before starting the backend
     depends_on:
-      db:
-        condition: service_healthy
-    # Environment variables used by Spring Boot to connect to the DB
+      db-init:
+        condition: service_completed_successfully
     environment:
-      SPRING_DATASOURCE_URL: jdbc:sqlserver://db:1433;databaseName=utilitydb;encrypt=false
+      SPRING_DATASOURCE_URL: jdbc:sqlserver://db:1433;databaseName=UtilityDB;encrypt=false
       SPRING_DATASOURCE_USERNAME: SA
       SPRING_DATASOURCE_PASSWORD: yourStrongPassword123
     networks:
@@ -23,27 +29,41 @@ services:
   # 2. Database Service (SQL Server)
   db:
     image: mcr.microsoft.com/mssql/server:2019-latest
+    container_name: sql_server_container
     ports:
       - "1433:1433"
     environment:
       ACCEPT_EULA: "Y"
-      SA_PASSWORD: "yourStrongPassword123" # !! Use the SAME password as in the backend environment above !!
-      MSSQL_PID: "Express" # Using the Express edition for development
+      SA_PASSWORD: "yourStrongPassword123"
+      MSSQL_PID: "Express"
     volumes:
-      - sqlserver-data:/var/opt/mssql # Persist data outside the container
-    healthcheck: # Health check to ensure the DB is ready before the backend starts
-      test: ["CMD", "/opt/mssql-tools/bin/sqlcmd", "-S", "localhost", "-U", "SA", "-P", "yourStrongPassword123", "-Q", "select 1"]
+      - sqlserver-data:/var/opt/mssql
+    healthcheck:
+      test: ["CMD", "/opt/mssql-tools18/bin/sqlcmd", "-S", "localhost", "-U", "SA", "-P", "yourStrongPassword123", "-C", "-Q", "SELECT 1"]
       interval: 10s
       timeout: 5s
-      retries: 5
+      retries: 10
+      start_period: 20s
     networks:
       - um_network
 
-# Define volumes for data persistence
+  # 3. Database Initializer
+  db-init:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    container_name: sql_init_container
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - ./init.sql:/tmp/init.sql
+    command: >
+      /opt/mssql-tools18/bin/sqlcmd -S db -U SA -P 'yourStrongPassword123' -C -d master -i /tmp/init.sql
+    networks:
+      - um_network
+
 volumes:
   sqlserver-data:
 
-# Define a network for the services to communicate with each other
 networks:
   um_network:
     driver: bridge

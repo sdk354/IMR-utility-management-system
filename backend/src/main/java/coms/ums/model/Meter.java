@@ -26,7 +26,7 @@ public class Meter {
     private String status;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "customerID", referencedColumnName = "userID")
+    @JoinColumn(name = "userID", referencedColumnName = "userID")
     private User customer;
 
 

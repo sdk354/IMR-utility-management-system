@@ -810,148 +810,107 @@ BEGIN
 END;
 GO
 --sample data 
-INSERT INTO Utility_Type (utilityName, unit, description)
+INSERT INTO Utility_Type (utilityName, description)
 VALUES
-('Electricity', 'kWh', 'Electricity consumption'),
-('Water', 'm3', 'Water consumption'),
-('Gas', 'm3', 'Gas consumption'),
-('Internet', 'GB', 'Internet usage'),
-('Sewage', 'm3', 'Sewage services'),
-('Heating', 'kWh', 'Heating services'),
-('Cooling', 'kWh', 'Cooling services'),
-('Parking', 'Days', 'Parking fees'),
-('Trash', 'kg', 'Trash disposal'),
-('Maintenance', 'Service', 'Building maintenance');
+    ('Electricity', 'Electricity utility service'),
+    ('Water', 'Water supply service'),
+    ('Gas', 'Gas utility service');
 
 INSERT INTO Role (roleName, description)
 VALUES
-('Admin', 'System administrator'),
-('Customer', 'Regular customer'),
-('MeterReader', 'Records meter readings'),
-('Accountant', 'Manages billing'),
-('Support', 'Handles complaints'),
-('Manager', 'Manages operations'),
-('Supervisor', 'Supervises staff'),
-('Technician', 'Fixes meters'),
-('Auditor', 'Checks records'),
-('Guest', 'Temporary user');
+    ('Administrative Staff', 'Management of customers and complaints.'),
+    ('Field Officer', 'Meter reading entry.'),
+    ('Billing Clerk', 'Bill and payment processing.'),
+    ('Manager', 'Reporting and analytics.'),
+    ('Customer', 'End user dashboard access.'),
+    ('Developer', 'System super-user.');
 
 INSERT INTO [User] (username, passwordHash, email, contactNo, street, streetNo, city, roleID)
 VALUES
-('john_doe', 'hash1', 'john@example.com', '0711234567', 'Main Street', '12A', 'Colombo', 2),
-('alice_smith', 'hash2', 'alice@example.com', '0722345678', 'Park Road', '5', 'Kandy', 2),
-('bob_jones', 'hash3', 'bob@example.com', '0773456789', 'River Street', '101', 'Galle', 2),
-('carol_lee', 'hash4', 'carol@example.com', '0754567890', 'Hill Road', '22B', 'Negombo', 2),
-('dave_wilson', 'hash5', 'dave@example.com', '0765678901', 'Lake Street', '8', 'Matara', 2),
-('eve_martin', 'hash6', 'eve@example.com', '0716789012', 'Ocean Road', '15', 'Jaffna', 2),
-('frank_taylor', 'hash7', 'frank@example.com', '0727890123', 'Garden Lane', '3', 'Batticaloa', 2),
-('grace_clark', 'hash8', 'grace@example.com', '0778901234', 'Forest Street', '7C', 'Trincomalee', 2),
-('henry_moore', 'hash9', 'henry@example.com', '0759012345', 'Hilltop Road', '9', 'Ratnapura', 2),
-('iris_wright', 'hash10', 'iris@example.com', '0760123456', 'Sunset Blvd', '11', 'Anuradhapura', 2);
+    ('john_doe', '$2a$12$4LFWUyjNLIM13znJlpk2UepqVhnLSZ1BbmogEfXkBrFBBVQdLW45q', 'john@example.com', '0711234567', 'Main Street', '12A', 'Colombo', 1),
+    ('alice_smith', '$2a$12$9GU7hkHKlVSWGcTe9VNaoe4yeLligHmbV71pFsTSYLV4FXIAlTapy', 'alice@example.com', '0722345678', 'Park Road', '5', 'Kandy', 1),
+    ('bob_jones', '$2a$12$BkBik4HT1lvQ6ISSHQ6UaeXWmcDgruTN.olr4H5raXYSrGfsiMeme', 'bob@example.com', '0773456789', 'River Street', '101', 'Galle', 2),
+    ('carol_lee', '$2a$12$OYL8zY603VACY8w1whm8wO6mP7zvvhs0ozDAMGlfkPzaS0vmtdiW.', 'carol@example.com', '0754567890', 'Hill Road', '22B', 'Negombo', 2),
+    ('dave_wilson', '$2a$12$Vz5tI4SfDBnCQH5k01lkluYg7NFleN/Cmk21/5IaSoFPxkjYLnVWW', 'dave@example.com', '0765678901', 'Lake Street', '8', 'Matara', 3),
+    ('eve_martin', '$2a$12$G9Y00Vl33T4avYxnGtrcfewCF4I7ff3D3WCpKZHuTy9RRvOLl.UCC', 'eve@example.com', '0716789012', 'Ocean Road', '15', 'Jaffna', 3),
+    ('frank_taylor', '$2a$12$6S75kBqssWlJ4Q1pqcAAYutfIhjaqzbzxvalM3JV4XTBuUUnxn6fO', 'frank@example.com', '0727890123', 'Garden Lane', '3', 'Batticaloa', 4),
+    ('grace_clark', '$2a$12$qlo64pauPYqUmTp3j.U58.Ev3aOh22ZsA1G1MB5cKOXU2OfHmJfZO', 'grace@example.com', '0778901234', 'Forest Street', '7C', 'Trincomalee', 4),
+    ('henry_moore', '$2a$12$fZFAWFGaumLuMcUVEXAlnOscxhU7fEhezSeJLF8S.m2KUJMjPynae', 'henry@example.com', '0759012345', 'Hilltop Road', '9', 'Ratnapura', 5),
+    ('iris_wright', '$2a$12$wrvZ71htQyrapGRYgaDs6.W/DW2KOTvpBB/3Nvm.AEZiOBNqYWvCi', 'iris@example.com', '0760123456', 'Sunset Blvd', '11', 'Anuradhapura', 5),
+    ('dev_account', '$2a$12$D6NjZLUDJoA1.AeWyE7FneWJdXY1WBIVh1nQ65EuDlGD3yiFZfNU6', 'dev@utility.com', '0000000000', 'System Drive', '00', 'Root', 6);
 
-INSERT INTO Meter (serialNumber, utilityTypeID, customerID, installationDate, status)
+INSERT INTO Meter (serialNumber, utilityTypeID, installationDate, status, userID)
 VALUES
-('ELEC001', 1, 1, '2025-01-01', 'Active'),
-('WATR001', 2, 2, '2025-01-02', 'Active'),
-('GAS001', 3, 3, '2025-01-03', 'Active'),
-('INT001', 4, 4, '2025-01-04', 'Active'),
-('SEW001', 5, 5, '2025-01-05', 'Active'),
-('HEAT001', 6, 6, '2025-01-06', 'Active'),
-('COOL001', 7, 7, '2025-01-07', 'Active'),
-('PARK001', 8, 8, '2025-01-08', 'Active'),
-('TRASH001', 9, 9, '2025-01-09', 'Active'),
-('MAINT001', 10, 10, '2025-01-10', 'Active');
+    ('E-HEN-101', 1, '2024-01-01', 'Live', 9),
+    ('W-HEN-102', 2, '2024-01-01', 'Live', 9),
+    ('G-HEN-103', 3, '2024-01-01', 'Under Repair', 9),
+    ('E-IRI-201', 1, '2024-02-01', 'Live', 10),
+    ('W-IRI-202', 2, '2024-02-01', 'Suspended', 10),
+    ('G-IRI-203', 3, '2024-02-01', 'Suspended', 10),
+    ('MTR-EXT-1', 1, '2023-05-10', 'Live', NULL),
+    ('MTR-EXT-2', 2, '2023-06-15', 'Live', NULL),
+    ('MTR-EXT-3', 3, '2023-07-01', 'Suspended', NULL),
+    ('MTR-EXT-4', 1, '2023-08-01', 'Under Repair', NULL);
 
 INSERT INTO Tariff (rate, effectiveFrom, effectiveTo, slabFrom, slabTo, fixedCharge, subsidiaryPercentage, utilityTypeID)
 VALUES
-(15.50, '2025-01-01', '2025-12-31', 0, 30, 50, 5, 1),
-(20.00, '2025-01-01', '2025-12-31', 31, 60, 50, 5, 1),
-(25.00, '2025-01-01', '2025-12-31', 0, 20, 30, 3, 2),
-(30.00, '2025-01-01', '2025-12-31', 21, 50, 30, 3, 2),
-(10.00, '2025-01-01', '2025-12-31', 0, 100, 20, 2, 3),
-(5.00, '2025-01-01', '2025-12-31', 0, 50, 10, 1, 4),
-(7.50, '2025-01-01', '2025-12-31', 51, 100, 10, 1, 4),
-(50.00, '2025-01-01', '2025-12-31', 0, 10, 100, 0, 5),
-(40.00, '2025-01-01', '2025-12-31', 0, 20, 80, 0, 6),
-(60.00, '2025-01-01', '2025-12-31', 0, 15, 120, 0, 7);
-
-INSERT INTO Meter_Reading (readingValue, readingDate, remarks, userID, meterID)
-VALUES
-(100, '2025-02-01', 'Initial reading', 1, 1),
-(150, '2025-02-02', 'Initial reading', 2, 2),
-(200, '2025-02-03', 'Initial reading', 3, 3),
-(250, '2025-02-04', 'Initial reading', 4, 4),
-(300, '2025-02-05', 'Initial reading', 5, 5),
-(350, '2025-02-06', 'Initial reading', 6, 6),
-(400, '2025-02-07', 'Initial reading', 7, 7),
-(450, '2025-02-08', 'Initial reading', 8, 8),
-(500, '2025-02-09', 'Initial reading', 9, 9),
-(550, '2025-02-10', 'Initial reading', 10, 10);
+    (15.0, '2025-01-01', '2025-12-31', 0, 30, 50, 5, 1),
+    (20.0, '2025-01-01', '2025-12-31', 31, 60, 50, 5, 1),
+    (30.0, '2025-01-01', '2025-12-31', 61, 999, 100, 0, 1),
+    (25.0, '2025-01-01', '2025-12-31', 0, 20, 30, 3, 2),
+    (35.0, '2025-01-01', '2025-12-31', 21, 50, 30, 3, 2),
+    (10.0, '2025-01-01', '2025-12-31', 0, 100, 20, 2, 3),
+    (12.0, '2026-01-01', '2026-12-31', 0, 100, 25, 2, 3),
+    (18.0, '2026-01-01', '2026-12-31', 0, 30, 55, 5, 1),
+    (28.0, '2026-01-01', '2026-12-31', 0, 20, 35, 3, 2),
+    (15.0, '2024-01-01', '2024-12-31', 0, 30, 45, 5, 1);
 
 INSERT INTO Bill (totalAmount, totalConsumption, billingPeriodStart, billingPeriodEnd, dueDate, userID)
 VALUES
-(500, 32, '2025-02-01', '2025-02-28', '2025-03-10', 1),
-(700, 45, '2025-02-01', '2025-02-28', '2025-03-10', 2),
-(600, 38, '2025-02-01', '2025-02-28', '2025-03-10', 3),
-(800, 50, '2025-02-01', '2025-02-28', '2025-03-10', 4),
-(450, 25, '2025-02-01', '2025-02-28', '2025-03-10', 5),
-(900, 55, '2025-02-01', '2025-02-28', '2025-03-10', 6),
-(750, 48, '2025-02-01', '2025-02-28', '2025-03-10', 7),
-(650, 40, '2025-02-01', '2025-02-28', '2025-03-10', 8),
-(550, 35, '2025-02-01', '2025-02-28', '2025-03-10', 9),
-(1000, 60, '2025-02-01', '2025-02-28', '2025-03-10', 10);
+    (500.00, 32, '2025-10-01', '2025-10-31', '2025-11-10', 9),
+    (450.00, 28, '2025-11-01', '2025-11-30', '2025-12-10', 9),
+    (520.00, 34, '2025-12-01', '2025-12-31', '2026-01-10', 9),
+    (120.00, 10, '2025-10-01', '2025-10-31', '2025-11-10', 9),
+    (150.00, 12, '2025-11-01', '2025-11-30', '2025-12-10', 9),
+    (600.00, 40, '2025-10-01', '2025-10-31', '2025-11-10', 10),
+    (550.00, 35, '2025-11-01', '2025-11-30', '2025-12-10', 10),
+    (580.00, 38, '2025-12-01', '2025-12-31', '2026-01-10', 10),
+    (200.00, 15, '2025-10-01', '2025-10-31', '2025-11-10', 10),
+    (210.00, 16, '2025-11-01', '2025-11-30', '2025-12-10', 10);
 
+INSERT INTO Complaint (userID, meterID, complaintText, complaintDate, status)
+VALUES
+    (9, 1, '[Electricity] High bill concern', '2025-11-21', 'Pending'),
+    (10, 5, '[Water] Low pressure', '2024-01-21', 'Pending'),
+    (1, 7, '[General] System login issue', '2024-08-23', 'Resolved'),
+    (9, 2, '[Water] Meter lid broken', '2025-09-13', 'Pending'),
+    (10, 4, '[Electricity] Power fluctuations', '2025-01-11', 'Pending'),
+    (3, 1, '[Staff Report] Meter tampering suspected', '2025-01-02', 'Resolved'),
+    (9, 3, '[Gas] Smell of gas near valve', '2024-04-22', 'Resolved'),
+    (10, 6, '[Gas] Monthly reading not updated', '2025-01-11', 'Pending'),
+    (2, 8, '[Maintenance] Area-wide outage', '2026-01-03', 'Resolved'),
+    (9, 1, '[Support] Request for historical data', '2025-10-10', 'Pending');
+
+INSERT INTO Meter_Reading (readingValue, readingDate, remarks, userID, meterID)
+VALUES
+    (1032, '2025-10-31', 'Oct Electricity Reading', 9, 1),
+    (1060, '2025-11-30', 'Nov Electricity Reading', 9, 1),
+    (1094, '2025-12-31', 'Dec Electricity Reading', 9, 1),
+    (510,  '2025-10-31', 'Oct Water Reading', 9, 2),
+    (522,  '2025-11-30', 'Nov Water Reading', 9, 2),
+    (2040, '2025-10-31', 'Oct Electricity Reading', 10, 4),
+    (2075, '2025-11-30', 'Nov Electricity Reading', 10, 4),
+    (2113, '2025-12-31', 'Dec Electricity Reading', 10, 4),
+    (815,  '2025-10-31', 'Oct Gas Reading', 10, 6),
+    (831,  '2025-11-30', 'Nov Gas Reading', 10, 6);
+
+INSERT INTO Payment (billID, userID, amount, paymentDate, paymentMethod, receiptNo)
+VALUES
+    (1, 9, 500.00, '2025-11-05', 'Card', 'REC-001'),
+    (2, 9, 450.00, '2025-12-05', 'Cash', 'REC-002'),
+    (4, 9, 120.00, '2025-11-05', 'Online', 'REC-005'),
+    (6, 10, 600.00, '2025-11-06', 'Online', 'REC-003'),
+    (7, 10, 550.00, '2025-12-06', 'Card', 'REC-004');
 INSERT INTO Bill_Tariff (billID, tariffID)
 VALUES
 (1,1),(1,2),(2,1),(2,2),(3,3),(4,4),(5,5),(6,6),(7,7),(8,8);
-
-INSERT INTO Complaint (userID, meterID, complaintText)
-VALUES
-(1,1,'Meter not working'),
-(2,2,'High bill issue'),
-(3,3,'Leakage detected'),
-(4,4,'No reading recorded'),
-(5,5,'Meter broken'),
-(6,6,'Incorrect bill'),
-(7,7,'Low voltage'),
-(8,8,'Water leakage'),
-(9,9,'Gas smell'),
-(10,10,'Internet outage');
-
-INSERT INTO Payment (billID, userID, amount, paymentMethod, receiptNo)
-VALUES
-(1,1,500,'Card','REC001'),
-(2,2,700,'Cash','REC002'),
-(3,3,600,'Card','REC003'),
-(4,4,800,'Bank','REC004'),
-(5,5,450,'Cash','REC005'),
-(6,6,900,'Card','REC006'),
-(7,7,750,'Bank','REC007'),
-(8,8,650,'Cash','REC008'),
-(9,9,550,'Card','REC009'),
-(10,10,1000,'Bank','REC010');
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
