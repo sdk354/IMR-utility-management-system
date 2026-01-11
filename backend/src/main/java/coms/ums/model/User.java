@@ -16,7 +16,7 @@ public class User {
     private String username;
 
     @Column(name = "passwordHash", nullable = false)
-    @com.fasterxml.jackson.annotation.JsonIgnore // <--- IMPORTANT: Prevents serialization issues & security leaks
+    @com.fasterxml.jackson.annotation.JsonIgnore
     private String password;
 
     @Column(name = "email")
@@ -39,11 +39,12 @@ public class User {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "roleID", nullable = false)
-// Add "users" to the ignore list if your Role entity has a List<User> users field
+
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "users"})
     private Role role;
 
-    public User() {}
+    public User() {
+    }
 
     public User(String username, String password, String email, Role role) {
         this.username = username;
@@ -52,33 +53,83 @@ public class User {
         this.role = role;
     }
 
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    public Long getId() {
+        return id;
+    }
 
-    public String getUsername() { return username; }
-    public void setUsername(String username) { this.username = username; }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-    public String getPassword() { return password; }
-    public void setPassword(String password) { this.password = password; }
+    public String getUsername() {
+        return username;
+    }
 
-    public String getEmail() { return email; }
-    public void setEmail(String email) { this.email = email; }
+    public void setUsername(String username) {
+        this.username = username;
+    }
 
-    public String getContactNo() { return contactNo; }
-    public void setContactNo(String contactNo) { this.contactNo = contactNo; }
+    public String getPassword() {
+        return password;
+    }
 
-    public String getStreet() { return street; }
-    public void setStreet(String street) { this.street = street; }
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
-    public String getStreetNo() { return streetNo; }
-    public void setStreetNo(String streetNo) { this.streetNo = streetNo; }
+    public String getEmail() {
+        return email;
+    }
 
-    public String getCity() { return city; }
-    public void setCity(String city) { this.city = city; }
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
-    public String getStatus() { return status; }
-    public void setStatus(String status) { this.status = status; }
+    public String getContactNo() {
+        return contactNo;
+    }
 
-    public Role getRole() { return role; }
-    public void setRole(Role role) { this.role = role; }
+    public void setContactNo(String contactNo) {
+        this.contactNo = contactNo;
+    }
+
+    public String getStreet() {
+        return street;
+    }
+
+    public void setStreet(String street) {
+        this.street = street;
+    }
+
+    public String getStreetNo() {
+        return streetNo;
+    }
+
+    public void setStreetNo(String streetNo) {
+        this.streetNo = streetNo;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
 }

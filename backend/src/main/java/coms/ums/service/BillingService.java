@@ -5,6 +5,7 @@ import coms.ums.model.User;
 import coms.ums.repository.BillRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -22,7 +23,6 @@ public class BillingService {
     }
 
     public List<Bill> getBillsByUser(User user) {
-        // FIXED: Changed to IssuedDate to match the Repository and Model
         return billRepository.findByUserOrderByIssuedDateDesc(user);
     }
 
@@ -36,8 +36,7 @@ public class BillingService {
 
     @Transactional
     public void markBillAsPaid(Long billId) {
-        Bill bill = billRepository.findById(billId)
-                .orElseThrow(() -> new IllegalArgumentException("Bill not found"));
+        Bill bill = billRepository.findById(billId).orElseThrow(() -> new IllegalArgumentException("Bill not found"));
         bill.setStatus("Paid");
         billRepository.save(bill);
     }
@@ -48,8 +47,7 @@ public class BillingService {
 
     @Transactional
     public Bill updateBill(Long id, Bill billDetails) {
-        Bill existingBill = billRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Bill not found"));
+        Bill existingBill = billRepository.findById(id).orElseThrow(() -> new RuntimeException("Bill not found"));
 
         existingBill.setTotalAmount(billDetails.getTotalAmount());
         existingBill.setTotalConsumption(billDetails.getTotalConsumption());

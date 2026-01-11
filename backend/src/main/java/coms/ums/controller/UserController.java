@@ -37,9 +37,7 @@ public class UserController {
     @GetMapping("/me")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<User> getCurrentUser(@AuthenticationPrincipal UserPrincipal userPrincipal) {
-        return userRepository.findById(userPrincipal.getUser().getId())
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+        return userRepository.findById(userPrincipal.getUser().getId()).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
     }
 
     /**
@@ -48,31 +46,28 @@ public class UserController {
      */
     @PutMapping("/profile")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<User> updateProfile(@AuthenticationPrincipal UserPrincipal userPrincipal,
-                                              @RequestBody Map<String, Object> payload) {
-        return userRepository.findById(userPrincipal.getUser().getId())
-                .map(user -> {
-                    // Using String.valueOf() handles the Object -> String conversion safely
-                    if(payload.containsKey("username")) {
-                        user.setUsername(String.valueOf(payload.get("username")));
-                    }
+    public ResponseEntity<User> updateProfile(@AuthenticationPrincipal UserPrincipal userPrincipal, @RequestBody Map<String, Object> payload) {
+        return userRepository.findById(userPrincipal.getUser().getId()).map(user -> {
+            // Using String.valueOf() handles the Object -> String conversion safely
+            if (payload.containsKey("username")) {
+                user.setUsername(String.valueOf(payload.get("username")));
+            }
 
-                    if(payload.containsKey("email")) {
-                        user.setEmail(String.valueOf(payload.get("email")));
-                    }
+            if (payload.containsKey("email")) {
+                user.setEmail(String.valueOf(payload.get("email")));
+            }
 
-                    if(payload.containsKey("phone")) {
-                        user.setContactNo(String.valueOf(payload.get("phone")));
-                    }
+            if (payload.containsKey("phone")) {
+                user.setContactNo(String.valueOf(payload.get("phone")));
+            }
 
-                    if(payload.containsKey("address")) {
-                        user.setStreet(String.valueOf(payload.get("address")));
-                    }
+            if (payload.containsKey("address")) {
+                user.setStreet(String.valueOf(payload.get("address")));
+            }
 
-                    User saved = userRepository.save(user);
-                    return ResponseEntity.ok(saved);
-                })
-                .orElse(ResponseEntity.notFound().build());
+            User saved = userRepository.save(user);
+            return ResponseEntity.ok(saved);
+        }).orElse(ResponseEntity.notFound().build());
     }
 
     // --- Management Methods (Admin/Staff) ---
@@ -84,15 +79,12 @@ public class UserController {
 
     @GetMapping("/{id}")
     public ResponseEntity<User> getUserById(@PathVariable Long id) {
-        return userRepository.findById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+        return userRepository.findById(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
     }
 
     @PostMapping
     public ResponseEntity<User> createUser(@RequestBody User user) {
-        Role customerRole = roleRepository.findByRoleName("Customer")
-                .orElseThrow(() -> new RuntimeException("Default Role not found"));
+        Role customerRole = roleRepository.findByRoleName("Customer").orElseThrow(() -> new RuntimeException("Default Role not found"));
         user.setRole(customerRole);
 
         // Hash password before saving
@@ -110,27 +102,25 @@ public class UserController {
      */
     @PutMapping("/{id}")
     public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User userDetails) {
-        return userRepository.findById(id)
-                .map(user -> {
-                    user.setUsername(userDetails.getUsername());
-                    user.setEmail(userDetails.getEmail());
-                    user.setContactNo(userDetails.getContactNo());
-                    user.setStatus(userDetails.getStatus());
-                    user.setStreet(userDetails.getStreet());
-                    user.setStreetNo(userDetails.getStreetNo());
-                    user.setCity(userDetails.getCity());
+        return userRepository.findById(id).map(user -> {
+            user.setUsername(userDetails.getUsername());
+            user.setEmail(userDetails.getEmail());
+            user.setContactNo(userDetails.getContactNo());
+            user.setStatus(userDetails.getStatus());
+            user.setStreet(userDetails.getStreet());
+            user.setStreetNo(userDetails.getStreetNo());
+            user.setCity(userDetails.getCity());
 
-                    // Only update password if a new one is provided
-                    if (userDetails.getPassword() != null && !userDetails.getPassword().isEmpty()) {
-                        user.setPassword(passwordEncoder.encode(userDetails.getPassword()));
-                    }
+            // Only update password if a new one is provided
+            if (userDetails.getPassword() != null && !userDetails.getPassword().isEmpty()) {
+                user.setPassword(passwordEncoder.encode(userDetails.getPassword()));
+            }
 
-                    if (userDetails.getRole() != null) {
-                        user.setRole(userDetails.getRole());
-                    }
+            if (userDetails.getRole() != null) {
+                user.setRole(userDetails.getRole());
+            }
 
-                    return ResponseEntity.ok(userRepository.save(user));
-                })
-                .orElse(ResponseEntity.notFound().build());
+            return ResponseEntity.ok(userRepository.save(user));
+        }).orElse(ResponseEntity.notFound().build());
     }
 }

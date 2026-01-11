@@ -8,6 +8,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 import java.util.Map;
 
@@ -38,24 +39,17 @@ public class ReportController {
 
     @GetMapping("/data")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<List<Map<String, Object>>> getReportData(
-            @RequestParam String type,
-            @RequestParam String period) {
+    public ResponseEntity<List<Map<String, Object>>> getReportData(@RequestParam String type, @RequestParam String period) {
         return ResponseEntity.ok(reportService.getReportDataList(type, period));
     }
 
     @GetMapping("/download")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<byte[]> downloadReport(
-            @RequestParam String type,
-            @RequestParam String period) {
+    public ResponseEntity<byte[]> downloadReport(@RequestParam String type, @RequestParam String period) {
 
         byte[] data = reportService.generateReportData(type, period);
         String filename = type.replace(" ", "_") + ".csv";
 
-        return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + filename)
-                .contentType(MediaType.parseMediaType("text/csv"))
-                .body(data);
+        return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + filename).contentType(MediaType.parseMediaType("text/csv")).body(data);
     }
 }

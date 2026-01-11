@@ -7,6 +7,7 @@ import coms.ums.repository.MeterRepository;
 import coms.ums.repository.PaymentRepository;
 import coms.ums.repository.UserRepository;
 import org.springframework.stereotype.Service;
+
 import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
@@ -25,10 +26,7 @@ public class ReportService {
     private final PaymentRepository paymentRepository;
     private final MeterRepository meterRepository;
 
-    public ReportService(UserRepository userRepository,
-                         BillRepository billRepository,
-                         PaymentRepository paymentRepository,
-                         MeterRepository meterRepository) {
+    public ReportService(UserRepository userRepository, BillRepository billRepository, PaymentRepository paymentRepository, MeterRepository meterRepository) {
         this.userRepository = userRepository;
         this.billRepository = billRepository;
         this.paymentRepository = paymentRepository;
@@ -43,9 +41,7 @@ public class ReportService {
         summary.put("metersSuspended", meterRepository.countByStatus("Suspended"));
 
         List<Bill> unpaidBills = billRepository.findByStatusAndDueDateBefore("Unpaid", LocalDate.now());
-        BigDecimal totalOutstanding = unpaidBills.stream()
-                .map(Bill::getTotalAmount)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        BigDecimal totalOutstanding = unpaidBills.stream().map(Bill::getTotalAmount).reduce(BigDecimal.ZERO, BigDecimal::add);
         summary.put("outstandingBalance", totalOutstanding);
 
         LocalDateTime startOfDay = LocalDateTime.of(LocalDate.now(), LocalTime.MIDNIGHT);
@@ -57,8 +53,7 @@ public class ReportService {
     }
 
     public Map<String, Object> getCustomerSummary(String username) {
-        User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new RuntimeException("User not found"));
 
         Map<String, Object> summary = new HashMap<>();
         List<Bill> bills = billRepository.findByUserOrderByIssuedDateDesc(user);
@@ -69,11 +64,7 @@ public class ReportService {
         summary.put("accountStatus", "Active");
         summary.put("currentUsage", latest != null ? latest.getTotalConsumption() : 0);
 
-        // Fetch last 12 months for the bar chart
-        List<Double> consumptionTrend = bills.stream()
-                .limit(12)
-                .map(Bill::getTotalConsumption)
-                .toList();
+        List<Double> consumptionTrend = bills.stream().limit(12).map(Bill::getTotalConsumption).toList();
         summary.put("consumptionTrend", consumptionTrend);
 
         return summary;
@@ -115,15 +106,13 @@ public class ReportService {
             csv.append("Date,Bill ID,Customer,Amount,Status\n");
             List<Bill> bills = billRepository.findAllByDueDateAfter(startDate);
             for (Bill b : bills) {
-                csv.append(String.format("%s,%d,%s,%s,%s\n",
-                        b.getDueDate(), b.getId(), b.getUser().getUsername(), b.getTotalAmount(), b.getStatus()));
+                csv.append(String.format("%s,%d,%s,%s,%s\n", b.getDueDate(), b.getId(), b.getUser().getUsername(), b.getTotalAmount(), b.getStatus()));
             }
         } else if (type.toLowerCase().contains("unpaid")) {
             csv.append("Customer,Email,Due Date,Outstanding Amount\n");
             List<Bill> unpaid = billRepository.findByStatusAndDueDateAfter("Unpaid", startDate);
             for (Bill b : unpaid) {
-                csv.append(String.format("%s,%s,%s,%s\n",
-                        b.getUser().getUsername(), b.getUser().getEmail(), b.getDueDate(), b.getTotalAmount()));
+                csv.append(String.format("%s,%s,%s,%s\n", b.getUser().getUsername(), b.getUser().getEmail(), b.getDueDate(), b.getTotalAmount()));
             }
         }
         return csv.toString().getBytes(StandardCharsets.UTF_8);

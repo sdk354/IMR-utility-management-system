@@ -27,9 +27,7 @@ public class TariffController {
     @GetMapping("/{id}")
     @PreAuthorize("hasAnyRole('ADMIN', 'DEV')")
     public ResponseEntity<Tariff> getTariffById(@PathVariable Long id) {
-        return tariffService.getTariffById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+        return tariffService.getTariffById(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
     }
 
     @PostMapping

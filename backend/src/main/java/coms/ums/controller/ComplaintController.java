@@ -25,23 +25,19 @@ public class ComplaintController {
         this.complaintService = complaintService;
     }
 
-    // Explicitly defining consumes ensures Spring knows this method handles JSON POSTs
+
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAnyRole('ADMIN', 'CUSTOMER', 'STAFF')")
-    public ResponseEntity<?> createComplaint(@RequestBody Map<String, String> payload,
-                                             @AuthenticationPrincipal UserPrincipal userPrincipal) {
+    public ResponseEntity<?> createComplaint(@RequestBody Map<String, String> payload, @AuthenticationPrincipal UserPrincipal userPrincipal) {
         try {
             if (userPrincipal == null) {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not authenticated");
             }
 
-            // 1. Merge fields into a single string for the existing 'complaintText' layout
-            String mergedText = String.format("[%s] %s: %s",
-                    payload.getOrDefault("type", "General"),
-                    payload.getOrDefault("subject", "No Subject"),
-                    payload.getOrDefault("description", "No Description"));
 
-            // 2. Map to existing Entity
+            String mergedText = String.format("[%s] %s: %s", payload.getOrDefault("type", "General"), payload.getOrDefault("subject", "No Subject"), payload.getOrDefault("description", "No Description"));
+
+
             Complaint complaint = new Complaint();
             complaint.setComplaintText(mergedText);
             complaint.setComplaintDate(LocalDateTime.now());

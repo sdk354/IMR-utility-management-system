@@ -1,6 +1,7 @@
 package coms.ums.model;
 
 import jakarta.persistence.*;
+
 import java.time.LocalDate;
 
 @Entity
@@ -9,7 +10,7 @@ public class Meter {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "meterID") // Matches your DB screenshot
+    @Column(name = "meterID")
     private Long id;
 
     @Column(name = "serialNumber", nullable = false, unique = true, length = 100)
@@ -28,22 +29,52 @@ public class Meter {
     @JoinColumn(name = "customerID", referencedColumnName = "userID")
     private User customer;
 
-    // --- Getters and Setters ---
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
 
-    public String getSerialNumber() { return serialNumber; }
-    public void setSerialNumber(String serialNumber) { this.serialNumber = serialNumber; }
+    public Long getId() {
+        return id;
+    }
 
-    public Integer getUtilityTypeId() { return utilityTypeId; }
-    public void setUtilityTypeId(Integer utilityTypeId) { this.utilityTypeId = utilityTypeId; }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-    public LocalDate getInstallationDate() { return installationDate; }
-    public void setInstallationDate(LocalDate installationDate) { this.installationDate = installationDate; }
+    public String getSerialNumber() {
+        return serialNumber;
+    }
 
-    public String getStatus() { return status; }
-    public void setStatus(String status) { this.status = status; }
+    public void setSerialNumber(String serialNumber) {
+        this.serialNumber = serialNumber;
+    }
 
-    public User getCustomer() { return customer; }
-    public void setCustomer(User customer) { this.customer = customer; }
+    public Integer getUtilityTypeId() {
+        return utilityTypeId;
+    }
+
+    public void setUtilityTypeId(Integer utilityTypeId) {
+        this.utilityTypeId = utilityTypeId;
+    }
+
+    public LocalDate getInstallationDate() {
+        return installationDate;
+    }
+
+    public void setInstallationDate(LocalDate installationDate) {
+        this.installationDate = installationDate;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public User getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(User customer) {
+        this.customer = customer;
+    }
 }

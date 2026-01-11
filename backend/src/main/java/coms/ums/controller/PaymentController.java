@@ -1,7 +1,7 @@
 package coms.ums.controller;
 
 import coms.ums.dto.PaymentRequestDTO;
-import coms.ums.dto.PaymentResponseDTO; // You need to create this DTO
+import coms.ums.dto.PaymentResponseDTO;
 import coms.ums.exception.TransactionFailedException;
 import coms.ums.model.Payment;
 import coms.ums.model.User;
@@ -30,8 +30,7 @@ public class PaymentController {
 
     @PostMapping("/process")
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<?> processPayment(@Valid @RequestBody PaymentRequestDTO paymentRequest,
-                                            @AuthenticationPrincipal UserPrincipal userPrincipal) {
+    public ResponseEntity<?> processPayment(@Valid @RequestBody PaymentRequestDTO paymentRequest, @AuthenticationPrincipal UserPrincipal userPrincipal) {
         try {
             User currentUser = userPrincipal.getUser();
             Payment newPayment = paymentService.processPayment(paymentRequest, currentUser);
@@ -41,32 +40,27 @@ public class PaymentController {
         }
     }
 
-    // NEW: Matches paymentService.getMyPayments() in React
+
     @GetMapping("/my-payments")
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<List<PaymentResponseDTO>> getMyPayments(@AuthenticationPrincipal UserPrincipal userPrincipal) {
-        List<PaymentResponseDTO> payments = paymentService.getPaymentsByUserId(userPrincipal.getUser().getId())
-                .stream().map(PaymentResponseDTO::new).collect(Collectors.toList());
+        List<PaymentResponseDTO> payments = paymentService.getPaymentsByUserId(userPrincipal.getUser().getId()).stream().map(PaymentResponseDTO::new).collect(Collectors.toList());
         return ResponseEntity.ok(payments);
     }
 
     @GetMapping("/user/{userId}")
     @PreAuthorize("hasAnyRole('ADMIN', 'DEV')")
     public ResponseEntity<List<PaymentResponseDTO>> getPaymentHistoryByUserId(@PathVariable Long userId) {
-        List<PaymentResponseDTO> payments = paymentService.getPaymentsByUserId(userId)
-                .stream().map(PaymentResponseDTO::new).collect(Collectors.toList());
+        List<PaymentResponseDTO> payments = paymentService.getPaymentsByUserId(userId).stream().map(PaymentResponseDTO::new).collect(Collectors.toList());
         return ResponseEntity.ok(payments);
     }
 
     @GetMapping
-    // Per your instructions: Only Admin sees all system payments.
-    // Any other role (Dev, Manager, User) uses their specific views.
+
+
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<PaymentResponseDTO>> getAllPayments() {
-        List<PaymentResponseDTO> payments = paymentService.getAllPayments()
-                .stream()
-                .map(PaymentResponseDTO::new)
-                .collect(Collectors.toList());
+        List<PaymentResponseDTO> payments = paymentService.getAllPayments().stream().map(PaymentResponseDTO::new).collect(Collectors.toList());
         return ResponseEntity.ok(payments);
     }
 }

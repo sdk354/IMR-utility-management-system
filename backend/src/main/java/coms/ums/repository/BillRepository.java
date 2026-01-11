@@ -12,14 +12,12 @@ import java.util.List;
 
 @Repository
 public interface BillRepository extends JpaRepository<Bill, Long> {
-
-    // REMOVED: findByUserOrderByBillDateDesc (This was the cause of the crash)
-
-    // USE THIS INSTEAD: Matches the 'issuedDate' field in your Bill model
     List<Bill> findByUserOrderByIssuedDateDesc(User user);
 
     List<Bill> findByStatusAndDueDateBefore(String status, LocalDate date);
+
     List<Bill> findAllByDueDateAfter(LocalDate date);
+
     List<Bill> findByStatusAndDueDateAfter(String status, LocalDate date);
 
     @Query("SELECT SUM(b.totalAmount) FROM Bill b WHERE b.issuedDate >= :startDate")

@@ -10,13 +10,10 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface MeterRepository extends JpaRepository<Meter, Long> {
 
-    @Query(value = "SELECT m FROM Meter m LEFT JOIN FETCH m.customer",
-            countQuery = "SELECT count(m) FROM Meter m")
+    @Query(value = "SELECT m FROM Meter m LEFT JOIN FETCH m.customer", countQuery = "SELECT count(m) FROM Meter m")
     Page<Meter> findAll(Pageable pageable);
 
-    // This is the standard one you are using
     long countByStatus(String status);
 
-    // Added this to handle "live", "Live", or "LIVE" safely
     long countByStatusIgnoreCase(String status);
 }

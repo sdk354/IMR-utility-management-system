@@ -30,11 +30,7 @@ public class MeterController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<MeterResponse>> list(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
-            @RequestParam(required = false) String sortBy,
-            @RequestParam(defaultValue = "asc") String direction) {
+    public ResponseEntity<Page<MeterResponse>> list(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size, @RequestParam(required = false) String sortBy, @RequestParam(defaultValue = "asc") String direction) {
         return ResponseEntity.ok(service.list(page, size, sortBy, direction));
     }
 

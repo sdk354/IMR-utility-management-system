@@ -1,28 +1,24 @@
-import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { paymentService } from '../../services/paymentService';
-import { billService } from '../../services/billService';
+import {useState, useEffect} from 'react';
+import {useNavigate} from 'react-router-dom';
+import {paymentService} from '../../services/paymentService';
+import {billService} from '../../services/billService';
 
 function RecordPayment() {
 	const navigate = useNavigate();
 
 	const [unpaidBills, setUnpaidBills] = useState([]);
 	const [formData, setFormData] = useState({
-		billId: '',
-		amount: '',
-		paymentMethod: 'Online'
+		billId: '', amount: '', paymentMethod: 'Online'
 	});
 
 	const [loading, setLoading] = useState(false);
 	const [fetchingBills, setFetchingBills] = useState(true);
 	const [error, setError] = useState('');
 
-	// 1. Fetch unpaid bills on load
 	useEffect(() => {
 		const fetchUnpaid = async () => {
 			try {
 				const data = await billService.getAllBills(false, true);
-				// Filter for Pending bills only
 				const pending = data.filter(bill => bill.status === 'Pending' || !bill.paid);
 				setUnpaidBills(pending);
 			} catch (err) {
@@ -36,18 +32,15 @@ function RecordPayment() {
 	}, []);
 
 	const handleChange = (e) => {
-		const { name, value } = e.target;
+		const {name, value} = e.target;
 
-		// 2. Special logic when choosing a bill: Auto-fill the amount
 		if (name === 'billId') {
 			const selectedBill = unpaidBills.find(b => b.billID.toString() === value);
 			setFormData(prev => ({
-				...prev,
-				billId: value,
-				amount: selectedBill ? selectedBill.totalAmount : ''
+				...prev, billId: value, amount: selectedBill ? selectedBill.totalAmount : ''
 			}));
 		} else {
-			setFormData(prev => ({ ...prev, [name]: value }));
+			setFormData(prev => ({...prev, [name]: value}));
 		}
 	};
 
@@ -74,75 +67,72 @@ function RecordPayment() {
 		}
 	};
 
-	return (
-		<div className="admin-page">
-			<div className="admin-page-header">
-				<h2>Record New Payment</h2>
-			</div>
+	return (<div className="admin-page">
+		<div className="admin-page-header">
+			<h2>Record New Payment</h2>
+		</div>
 
-			<div className="admin-form-container">
-				<div className="admin-card" style={{ maxWidth: '700px' }}>
-					{error && <div className="error-box" style={{color: 'red', marginBottom: '1rem'}}>{error}</div>}
+		<div className="admin-form-container">
+			<div className="admin-card" style={{maxWidth: '700px'}}>
+				{error && <div className="error-box" style={{color: 'red', marginBottom: '1rem'}}>{error}</div>}
 
-					<form onSubmit={handleSubmit}>
-						<div className="admin-form-grid">
+				<form onSubmit={handleSubmit}>
+					<div className="admin-form-grid">
 
-							<div className="admin-form-group">
-								<label>Select Unpaid Bill</label>
-								<select
-									name="billId"
-									value={formData.billId}
-									onChange={handleChange}
-									required
-									disabled={fetchingBills}
-								>
-									<option value="">-- Select a Bill --</option>
-									{unpaidBills.map(bill => (
-										<option key={bill.billID} value={bill.billID}>
-											Bill #{bill.billID} - {bill.user?.username || 'N/A'} (Rs. {bill.totalAmount})
-										</option>
-									))}
-								</select>
-								{fetchingBills && <small>Loading bills...</small>}
-							</div>
-
-							<div className="admin-form-group">
-								<label>Amount (Rs.)</label>
-								<input
-									type="number"
-									name="amount"
-									value={formData.amount}
-									onChange={handleChange}
-									placeholder="0.00"
-									required
-								/>
-								<small>Auto-filled from bill total</small>
-							</div>
-
-							<div className="admin-form-group">
-								<label>Payment Method</label>
-								<select name="paymentMethod" value={formData.paymentMethod} onChange={handleChange}>
-									<option value="Online">Online</option>
-									<option value="Cash">Cash</option>
-									<option value="Card">Card</option>
-									<option value="Bank Transfer">Bank Transfer</option>
-								</select>
-							</div>
+						<div className="admin-form-group">
+							<label>Select Unpaid Bill</label>
+							<select
+								name="billId"
+								value={formData.billId}
+								onChange={handleChange}
+								required
+								disabled={fetchingBills}
+							>
+								<option value="">-- Select a Bill --</option>
+								{unpaidBills.map(bill => (<option key={bill.billID} value={bill.billID}>
+									Bill #{bill.billID} - {bill.user?.username || 'N/A'} (Rs. {bill.totalAmount})
+								</option>))}
+							</select>
+							{fetchingBills && <small>Loading bills...</small>}
 						</div>
 
-						<div className="admin-page-actions" style={{ marginTop: '2rem' }}>
-							<button type="button" onClick={() => navigate('/admin/payments')} className="admin-btn-secondary">
-								Cancel
-							</button>
-							<button type="submit" className="admin-btn-primary" disabled={loading || fetchingBills}>
-								{loading ? 'Processing...' : 'Record Payment'}
-							</button>
+						<div className="admin-form-group">
+							<label>Amount (Rs.)</label>
+							<input
+								type="number"
+								name="amount"
+								value={formData.amount}
+								onChange={handleChange}
+								placeholder="0.00"
+								required
+							/>
+							<small>Auto-filled from bill total</small>
 						</div>
-					</form>
-				</div>
+
+						<div className="admin-form-group">
+							<label>Payment Method</label>
+							<select name="paymentMethod" value={formData.paymentMethod} onChange={handleChange}>
+								<option value="Online">Online</option>
+								<option value="Cash">Cash</option>
+								<option value="Card">Card</option>
+								<option value="Bank Transfer">Bank Transfer</option>
+							</select>
+						</div>
+					</div>
+
+					<div className="admin-page-actions" style={{marginTop: '2rem'}}>
+						<button type="button" onClick={() => navigate('/admin/payments')}
+								className="admin-btn-secondary">
+							Cancel
+						</button>
+						<button type="submit" className="admin-btn-primary" disabled={loading || fetchingBills}>
+							{loading ? 'Processing...' : 'Record Payment'}
+						</button>
+					</div>
+				</form>
 			</div>
 		</div>
-	);
+	</div>);
 }
 
 export default RecordPayment;

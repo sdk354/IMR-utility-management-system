@@ -1,5 +1,4 @@
-// src/components/layout/CustomerLayout.jsx
-import { Outlet, useLocation } from 'react-router-dom';
+import {Outlet, useLocation} from 'react-router-dom';
 import Sidebar from './Sidebar';
 import Header from './Header';
 
@@ -14,24 +13,22 @@ function CustomerLayout() {
 			'/customer/bills/:id': 'Bill Details',
 			'/customer/payment': 'Payments',
 			'/customer/support': 'Complaints',
-			'/customer/profile': 'Profile',
+			'/customer/profile': 'Profile'
 		};
 		return titles[path] || 'Customer Portal';
 	};
 
-	return (
-		<div className="customer-layout">
-			<Sidebar isCustomer={true} />
+	return (<div className="customer-layout">
+			<Sidebar isCustomer={true}/>
 			<div className="customer-main">
-				<Header title={getPageTitle()} isCustomer={true} />
+				<Header title={getPageTitle()} isCustomer={true}/>
 				<main className="customer-content">
 					<div className="customer-container">
-						<Outlet />
+						<Outlet/>
 					</div>
 				</main>
 			</div>
-		</div>
-	);
+		</div>);
 }
 
 export default CustomerLayout;

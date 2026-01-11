@@ -1,13 +1,11 @@
-import { useNavigate } from 'react-router-dom';
+import {useNavigate} from 'react-router-dom';
 
-function Header({ title, isCustomer = false }) {
+function Header({title, isCustomer = false}) {
 	const navigate = useNavigate();
 
-	// 1. Retrieve user data from localStorage
 	const userData = localStorage.getItem('user');
 	const user = userData ? JSON.parse(userData) : null;
 
-	// 2. Role mapping based on your database string values
 	const roleMapping = {
 		"Administrative Staff": "Administrative Staff",
 		"Field Officer": "Field Officer",
@@ -17,7 +15,6 @@ function Header({ title, isCustomer = false }) {
 		"ROLE_USER": "User"
 	};
 
-	// 3. Logic for initials (e.g., "carol_lee" -> CL)
 	const getInitials = (name) => {
 		if (!name || name === 'Guest') return "GU";
 		const parts = name.split(/[_\s]/);
@@ -27,7 +24,6 @@ function Header({ title, isCustomer = false }) {
 		return name.slice(0, 2).toUpperCase();
 	};
 
-	// 4. Formatting the Display Name (e.g., "carol_lee" -> "Carol Lee")
 	const formatDisplayName = (name) => {
 		if (!name) return "Guest";
 		return name
@@ -36,7 +32,6 @@ function Header({ title, isCustomer = false }) {
 			.join(' ');
 	};
 
-	// 5. Resolve display values
 	const username = user?.username || 'Guest';
 	const displayName = formatDisplayName(username);
 	const userInitials = getInitials(username);
@@ -49,7 +44,6 @@ function Header({ title, isCustomer = false }) {
 		}
 	};
 
-	// Style classes
 	const headerClass = isCustomer ? 'customer-header' : 'admin-header';
 	const titleClass = isCustomer ? 'customer-page-title' : 'admin-page-title';
 	const profileClass = isCustomer ? 'customer-user-profile' : 'admin-user-profile';
@@ -57,20 +51,18 @@ function Header({ title, isCustomer = false }) {
 	const nameClass = isCustomer ? 'customer-user-name' : 'admin-user-name';
 	const roleClass = isCustomer ? 'customer-user-role' : 'admin-user-role';
 
-	return (
-		<header className={headerClass}>
-			<h1 className={titleClass}>{title}</h1>
-			<div className={profileClass} onClick={handleLogout}>
-				<div className={avatarClass}>{userInitials}</div>
-				<div style={{ display: 'flex', flexDirection: 'column', lineHeight: '1.2' }}>
-					<div className={nameClass}>{displayName}</div>
-					<div className={roleClass}>
-						@{username} • {displayRole}
-					</div>
+	return (<header className={headerClass}>
+		<h1 className={titleClass}>{title}</h1>
+		<div className={profileClass} onClick={handleLogout}>
+			<div className={avatarClass}>{userInitials}</div>
+			<div style={{display: 'flex', flexDirection: 'column', lineHeight: '1.2'}}>
+				<div className={nameClass}>{displayName}</div>
+				<div className={roleClass}>
+					@{username} • {displayRole}
 				</div>
 			</div>
-		</header>
-	);
+		</div>
+	</header>);
 }
 
 export default Header;

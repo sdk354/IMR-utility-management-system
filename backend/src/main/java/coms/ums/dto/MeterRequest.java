@@ -1,6 +1,7 @@
 package coms.ums.dto;
 
 import jakarta.validation.constraints.*;
+
 import java.time.LocalDate;
 
 public class MeterRequest {
@@ -16,19 +17,44 @@ public class MeterRequest {
     private LocalDate installationDate;
     private String status;
 
-    // --- All Getters and Setters MUST be present ---
-    public String getSerialNumber() { return serialNumber; }
-    public void setSerialNumber(String serialNumber) { this.serialNumber = serialNumber; }
 
-    public Integer getUtilityTypeId() { return utilityTypeId; }
-    public void setUtilityTypeId(Integer utilityTypeId) { this.utilityTypeId = utilityTypeId; }
+    public String getSerialNumber() {
+        return serialNumber;
+    }
 
-    public Long getCustomerId() { return customerId; }
-    public void setCustomerId(Long customerId) { this.customerId = customerId; }
+    public void setSerialNumber(String serialNumber) {
+        this.serialNumber = serialNumber;
+    }
 
-    public LocalDate getInstallationDate() { return installationDate; }
-    public void setInstallationDate(LocalDate installationDate) { this.installationDate = installationDate; }
+    public Integer getUtilityTypeId() {
+        return utilityTypeId;
+    }
 
-    public String getStatus() { return status; }
-    public void setStatus(String status) { this.status = status; }
+    public void setUtilityTypeId(Integer utilityTypeId) {
+        this.utilityTypeId = utilityTypeId;
+    }
+
+    public Long getCustomerId() {
+        return customerId;
+    }
+
+    public void setCustomerId(Long customerId) {
+        this.customerId = customerId;
+    }
+
+    public LocalDate getInstallationDate() {
+        return installationDate;
+    }
+
+    public void setInstallationDate(LocalDate installationDate) {
+        this.installationDate = installationDate;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
 }

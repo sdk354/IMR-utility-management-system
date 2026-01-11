@@ -24,10 +24,8 @@ public class MeterService {
 
     @Transactional
     public MeterResponse create(MeterRequest req) {
-        User customer = userRepo.findById(req.getCustomerId())
-                .orElseThrow(() -> new NotFoundException("Customer not found"));
+        User customer = userRepo.findById(req.getCustomerId()).orElseThrow(() -> new NotFoundException("Customer not found"));
 
-        // Validation: Only allow users with the 'Customer' role
         if (customer.getRole() == null || !"Customer".equalsIgnoreCase(customer.getRole().getRoleName())) {
             throw new IllegalArgumentException("Meters can only be assigned to users with the 'Customer' role.");
         }
@@ -51,12 +49,9 @@ public class MeterService {
         m.setInstallationDate(req.getInstallationDate());
         m.setStatus(req.getStatus());
 
-        // Manually fetch the User and attach it
         if (req.getCustomerId() != null) {
-            User customer = userRepo.findById(req.getCustomerId())
-                    .orElseThrow(() -> new NotFoundException("User not found"));
+            User customer = userRepo.findById(req.getCustomerId()).orElseThrow(() -> new NotFoundException("User not found"));
 
-            // Validation: Only allow users with the 'Customer' role
             if (customer.getRole() == null || !"Customer".equalsIgnoreCase(customer.getRole().getRoleName())) {
                 throw new IllegalArgumentException("Cannot assign meter to an Admin. Only 'Customer' role allowed.");
             }
@@ -66,7 +61,7 @@ public class MeterService {
             m.setCustomer(null);
         }
 
-        Meter saved = meterRepo.saveAndFlush(m); // saveAndFlush forces an immediate DB write
+        Meter saved = meterRepo.saveAndFlush(m);
         return toResponse(saved);
     }
 

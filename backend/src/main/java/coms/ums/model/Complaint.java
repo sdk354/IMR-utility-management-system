@@ -2,6 +2,7 @@ package coms.ums.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
+
 import java.time.LocalDateTime;
 
 @Entity
@@ -24,7 +25,7 @@ public class Complaint {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "userID", nullable = false)
-    // Prevents Infinite Recursion loop: User -> Complaint -> User
+
     @JsonIgnoreProperties({"complaints", "password", "handler", "hibernateLazyInitializer"})
     private User user;
 
@@ -33,19 +34,55 @@ public class Complaint {
     @JsonIgnoreProperties({"complaints", "handler", "hibernateLazyInitializer"})
     private Meter meter;
 
-    public Complaint() {}
+    public Complaint() {
+    }
 
-    // Getters and Setters
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
-    public String getComplaintText() { return complaintText; }
-    public void setComplaintText(String complaintText) { this.complaintText = complaintText; }
-    public LocalDateTime getComplaintDate() { return complaintDate; }
-    public void setComplaintDate(LocalDateTime complaintDate) { this.complaintDate = complaintDate; }
-    public String getStatus() { return status; }
-    public void setStatus(String status) { this.status = status; }
-    public User getUser() { return user; }
-    public void setUser(User user) { this.user = user; }
-    public Meter getMeter() { return meter; }
-    public void setMeter(Meter meter) { this.meter = meter; }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getComplaintText() {
+        return complaintText;
+    }
+
+    public void setComplaintText(String complaintText) {
+        this.complaintText = complaintText;
+    }
+
+    public LocalDateTime getComplaintDate() {
+        return complaintDate;
+    }
+
+    public void setComplaintDate(LocalDateTime complaintDate) {
+        this.complaintDate = complaintDate;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public Meter getMeter() {
+        return meter;
+    }
+
+    public void setMeter(Meter meter) {
+        this.meter = meter;
+    }
 }

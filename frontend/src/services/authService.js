@@ -1,10 +1,10 @@
-import { apiRequest } from './api';
+import {apiRequest} from './api';
 
 const AUTH_URL = "/auth";
 
 export const authService = {
 	login: async (username, password) => {
-		const data = await apiRequest(`${AUTH_URL}/login`, "POST", { username, password });
+		const data = await apiRequest(`${AUTH_URL}/login`, "POST", {username, password});
 		if (data.token) {
 			localStorage.setItem("user", JSON.stringify(data));
 		}
@@ -19,7 +19,6 @@ export const authService = {
 		localStorage.removeItem("user");
 	},
 
-	// ADD THIS FUNCTION:
 	getCurrentUser: () => {
 		const userStr = localStorage.getItem("user");
 		if (!userStr) return null;

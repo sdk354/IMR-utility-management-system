@@ -7,5 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface MeterReadingRepository extends JpaRepository<MeterReading, Long> {
     Page<MeterReading> findAllByMeterId(Long meterId, Pageable pageable);
+
     Page<MeterReading> findAllByUserId(Long userId, Pageable pageable);
 }

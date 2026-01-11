@@ -18,12 +18,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     }
 
     @Override
-    @Transactional(readOnly = true) // Ensures session is open for lazy loading roles if needed
+    @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userRepository.findByUsername(username)
-                .map(UserPrincipal::new)
-                .orElseThrow(() ->
-                        new UsernameNotFoundException("User not found with username: " + username)
-                );
+        return userRepository.findByUsername(username).map(UserPrincipal::new).orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + username));
     }
 }

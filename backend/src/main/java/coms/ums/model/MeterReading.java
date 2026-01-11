@@ -1,6 +1,7 @@
 package coms.ums.model;
 
 import jakarta.persistence.*;
+
 import java.math.BigDecimal;
 
 @Entity
@@ -16,7 +17,7 @@ public class MeterReading {
     private BigDecimal readingValue;
 
     @Column(name = "readingDate", nullable = false)
-    private String readingDate; // Using String for easy React/SQL compatibility
+    private String readingDate;
 
     @Column(name = "remarks", length = 255)
     private String remarks;
@@ -27,23 +28,54 @@ public class MeterReading {
     @Column(name = "meterID", nullable = false)
     private Long meterId;
 
-    public MeterReading() {}
+    public MeterReading() {
+    }
 
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    public Long getId() {
+        return id;
+    }
 
-    public BigDecimal getReadingValue() { return readingValue; }
-    public void setReadingValue(BigDecimal readingValue) { this.readingValue = readingValue; }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-    public String getReadingDate() { return readingDate; }
-    public void setReadingDate(String readingDate) { this.readingDate = readingDate; }
+    public BigDecimal getReadingValue() {
+        return readingValue;
+    }
 
-    public String getRemarks() { return remarks; }
-    public void setRemarks(String remarks) { this.remarks = remarks; }
+    public void setReadingValue(BigDecimal readingValue) {
+        this.readingValue = readingValue;
+    }
 
-    public Long getUserId() { return userId; }
-    public void setUserId(Long userId) { this.userId = userId; }
+    public String getReadingDate() {
+        return readingDate;
+    }
 
-    public Long getMeterId() { return meterId; }
-    public void setMeterId(Long meterId) { this.meterId = meterId; }
+    public void setReadingDate(String readingDate) {
+        this.readingDate = readingDate;
+    }
+
+    public String getRemarks() {
+        return remarks;
+    }
+
+    public void setRemarks(String remarks) {
+        this.remarks = remarks;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
+    public Long getMeterId() {
+        return meterId;
+    }
+
+    public void setMeterId(Long meterId) {
+        this.meterId = meterId;
+    }
 }

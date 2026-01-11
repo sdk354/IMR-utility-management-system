@@ -3,13 +3,11 @@ const BASE_URL = 'http://localhost:8080/api/complaints';
 const getAuthHeader = () => {
 	const user = JSON.parse(localStorage.getItem('user'));
 	return {
-		'Authorization': `Bearer ${user?.token}`,
-		'Content-Type': 'application/json'
+		'Authorization': `Bearer ${user?.token}`, 'Content-Type': 'application/json'
 	};
 };
 
 export const complaintService = {
-	// Fetches all complaints (Role-based logic handled by backend)
 	getAllComplaints: async () => {
 		const response = await fetch(BASE_URL, {
 			headers: getAuthHeader()
@@ -18,12 +16,9 @@ export const complaintService = {
 		return await response.json();
 	},
 
-	// NEW: Method to submit a new complaint
 	createComplaint: async (complaintData) => {
 		const response = await fetch(BASE_URL, {
-			method: 'POST',
-			headers: getAuthHeader(),
-			body: JSON.stringify(complaintData)
+			method: 'POST', headers: getAuthHeader(), body: JSON.stringify(complaintData)
 		});
 		if (!response.ok) {
 			const error = await response.text();
@@ -34,9 +29,7 @@ export const complaintService = {
 
 	updateStatus: async (id, newStatus) => {
 		const response = await fetch(`${BASE_URL}/${id}/status`, {
-			method: 'PATCH',
-			headers: getAuthHeader(),
-			body: JSON.stringify({ status: newStatus })
+			method: 'PATCH', headers: getAuthHeader(), body: JSON.stringify({status: newStatus})
 		});
 		if (!response.ok) throw new Error('Failed to update status');
 		return await response.json();

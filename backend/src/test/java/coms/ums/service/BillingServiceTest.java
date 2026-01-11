@@ -58,21 +58,16 @@ public class BillingServiceTest {
 
     @Test
     void whenGetBillsByUser_returnsListOfBills() {
-        // ARRANGE
         List<Bill> bills = List.of(testBill);
 
-        // FIXED: Renamed to findByUserOrderByIssuedDateDesc to match the Repository/Service
         when(billRepository.findByUserOrderByIssuedDateDesc(testUser)).thenReturn(bills);
 
-        // ACT
         List<Bill> result = billingService.getBillsByUser(testUser);
 
-        // ASSERT
         assertNotNull(result, "The result should not be null");
         assertFalse(result.isEmpty(), "The bill list should not be empty");
         assertEquals(1, result.size());
 
-        // FIXED: Verify the call was made to the correct method
         verify(billRepository, times(1)).findByUserOrderByIssuedDateDesc(testUser);
     }
 }

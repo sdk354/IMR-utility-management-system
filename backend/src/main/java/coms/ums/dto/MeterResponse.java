@@ -9,29 +9,62 @@ public class MeterResponse {
     private LocalDate installationDate;
     private String status;
 
-    // Flattened fields replace the User object
     private Long customerId;
     private String customerName;
 
-    // --- Getters and Setters ---
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    public Long getId() {
+        return id;
+    }
 
-    public String getSerialNumber() { return serialNumber; }
-    public void setSerialNumber(String serialNumber) { this.serialNumber = serialNumber; }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-    public Integer getUtilityTypeId() { return utilityTypeId; }
-    public void setUtilityTypeId(Integer utilityTypeId) { this.utilityTypeId = utilityTypeId; }
+    public String getSerialNumber() {
+        return serialNumber;
+    }
 
-    public LocalDate getInstallationDate() { return installationDate; }
-    public void setInstallationDate(LocalDate installationDate) { this.installationDate = installationDate; }
+    public void setSerialNumber(String serialNumber) {
+        this.serialNumber = serialNumber;
+    }
 
-    public String getStatus() { return status; }
-    public void setStatus(String status) { this.status = status; }
+    public Integer getUtilityTypeId() {
+        return utilityTypeId;
+    }
 
-    public Long getCustomerId() { return customerId; }
-    public void setCustomerId(Long customerId) { this.customerId = customerId; }
+    public void setUtilityTypeId(Integer utilityTypeId) {
+        this.utilityTypeId = utilityTypeId;
+    }
 
-    public String getCustomerName() { return customerName; }
-    public void setCustomerName(String customerName) { this.customerName = customerName; }
+    public LocalDate getInstallationDate() {
+        return installationDate;
+    }
+
+    public void setInstallationDate(LocalDate installationDate) {
+        this.installationDate = installationDate;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public Long getCustomerId() {
+        return customerId;
+    }
+
+    public void setCustomerId(Long customerId) {
+        this.customerId = customerId;
+    }
+
+    public String getCustomerName() {
+        return customerName;
+    }
+
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
+    }
 }

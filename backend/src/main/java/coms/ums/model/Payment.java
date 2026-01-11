@@ -1,6 +1,7 @@
 package coms.ums.model;
 
 import jakarta.persistence.*;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
@@ -21,7 +22,6 @@ public class Payment {
     @JoinColumn(name = "userID")
     private User user;
 
-    // Fixed: Matches 'amount' column in your database screenshot
     @Column(name = "amount", precision = 12, scale = 2, nullable = false)
     private BigDecimal amount;
 
@@ -34,27 +34,59 @@ public class Payment {
     @Column(name = "receiptNo", length = 100)
     private String receiptNo;
 
-    // Removed transactionReference as it does not exist in your DB schema
+    public Integer getPaymentID() {
+        return paymentID;
+    }
 
-    // --- Getters and setters ---
-    public Integer getPaymentID() { return paymentID; }
-    public void setPaymentID(Integer paymentID) { this.paymentID = paymentID; }
+    public void setPaymentID(Integer paymentID) {
+        this.paymentID = paymentID;
+    }
 
-    public Bill getBill() { return bill; }
-    public void setBill(Bill bill) { this.bill = bill; }
+    public Bill getBill() {
+        return bill;
+    }
 
-    public User getUser() { return user; }
-    public void setUser(User user) { this.user = user; }
+    public void setBill(Bill bill) {
+        this.bill = bill;
+    }
 
-    public BigDecimal getAmount() { return amount; }
-    public void setAmount(BigDecimal amount) { this.amount = amount; }
+    public User getUser() {
+        return user;
+    }
 
-    public LocalDateTime getPaymentDate() { return paymentDate; }
-    public void setPaymentDate(LocalDateTime paymentDate) { this.paymentDate = paymentDate; }
+    public void setUser(User user) {
+        this.user = user;
+    }
 
-    public String getPaymentMethod() { return paymentMethod; }
-    public void setPaymentMethod(String paymentMethod) { this.paymentMethod = paymentMethod; }
+    public BigDecimal getAmount() {
+        return amount;
+    }
 
-    public String getReceiptNo() { return receiptNo; }
-    public void setReceiptNo(String receiptNo) { this.receiptNo = receiptNo; }
+    public void setAmount(BigDecimal amount) {
+        this.amount = amount;
+    }
+
+    public LocalDateTime getPaymentDate() {
+        return paymentDate;
+    }
+
+    public void setPaymentDate(LocalDateTime paymentDate) {
+        this.paymentDate = paymentDate;
+    }
+
+    public String getPaymentMethod() {
+        return paymentMethod;
+    }
+
+    public void setPaymentMethod(String paymentMethod) {
+        this.paymentMethod = paymentMethod;
+    }
+
+    public String getReceiptNo() {
+        return receiptNo;
+    }
+
+    public void setReceiptNo(String receiptNo) {
+        this.receiptNo = receiptNo;
+    }
 }
