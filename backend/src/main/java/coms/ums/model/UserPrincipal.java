@@ -25,8 +25,8 @@ public class UserPrincipal implements UserDetails {
      */
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        // Assuming your User entity has a single String field called 'role' (e.g., "USER", "ADMIN")
-        return Collections.singletonList(new SimpleGrantedAuthority(user.getRole()));
+        String roleName = (user.getRole() != null) ? user.getRole().getRoleName() : "ROLE_USER";
+        return Collections.singletonList(new SimpleGrantedAuthority(roleName));
     }
 
     @Override

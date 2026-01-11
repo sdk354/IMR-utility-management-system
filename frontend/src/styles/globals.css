@@ -293,9 +293,28 @@ a {
   font-weight: 500;
 }
 
-.admin-status.completed { background: #d1fae5; color: #065f46; }
-.admin-status.pending { background: #fef3c7; color: #92400e; }
-.admin-status.incompleted { background: #f892b4; color: #bd031f; }
+/* Meter Status Colors */
+
+/* "Live" - Success/Active state */
+.admin-status.completed {
+  background-color: #ecfdf5;
+  color: #059669;
+  border: 1px solid #10b981;
+}
+
+/* "Under Repair" - Warning/Action required state */
+.admin-status.pending {
+  background-color: #fffbeb;
+  color: #d97706;
+  border: 1px solid #f59e0b;
+}
+
+/* "Suspended" - Danger/Halted state */
+.admin-status.incompleted {
+  background-color: #fef2f2;
+  color: #dc2626;
+  border: 1px solid #ef4444;
+}
 
 /* Admin Reports */
 .admin-reports-grid {
@@ -398,7 +417,8 @@ a {
 /* Admin Dashboard */
 .admin-dashboard-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  /* Explicitly set 2 columns for the 2x2 look */
+  grid-template-columns: repeat(2, 1fr);
   gap: 1.5rem;
   margin-bottom: 2rem;
 }
@@ -410,7 +430,9 @@ a {
   box-shadow: 0 1px 3px rgba(0,0,0,0.1);
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 1.25rem;
+  /* Prevents the card from expanding past its grid cell */
+  min-width: 0;
 }
 
 .admin-summary-icon {
@@ -420,33 +442,33 @@ a {
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-shrink: 0;
+  flex-shrink: 0; /* Ensures the icon never squishes */
 }
 
-.admin-summary-icon.blue    { background: #dbeafe; }
-.admin-summary-icon.green   { background: #d1fae5; }
-.admin-summary-icon.orange  { background: #fed7aa; }
-.admin-summary-icon.teal    { background: #ccfbf1; }
-
-.admin-summary-title {
-  font-size: 0.875rem;
-  color: #6b7280;
-  margin-bottom: 0.25rem;
+/* NEW: This container handles the text flexing */
+.admin-summary-text-wrapper {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
 }
 
 .admin-summary-value {
-  font-size: 1.75rem;
+  font-size: 1.5rem; /* Slightly smaller to fit "LKR" comfortably */
   font-weight: 700;
   color: #1f2937;
+  /* These 3 lines prevent the text from going off the card */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.admin-summary-change {
-  font-size: 0.8125rem;
-  margin-top: 0.25rem;
+/* Maintain 1 column for mobile phones */
+@media (max-width: 768px) {
+  .admin-dashboard-grid {
+    grid-template-columns: 1fr;
+  }
 }
-
-.admin-summary-change.up   { color: #059669; }
-.admin-summary-change.down { color: #dc2626; }
 
 /* Admin Dashboard Icons */
 .icon-users,
@@ -1265,4 +1287,390 @@ a {
   margin-top: 2rem;
   font-size: 0.9rem;
   color: #9ca3af;
+}
+.admin-icon-arrow {
+  width: 20px;
+  height: 20px;
+  display: inline-block;
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  flex-shrink: 0;
+}
+
+.customer-icon-arrow {
+  width: 20px;
+  height: 20px;
+  display: inline-block;
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  flex-shrink: 0;
+}
+
+.admin-logout-btn, .customer-logout-btn {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 0.9rem 1rem;
+  width: 100%;
+}
+
+.admin-logout-btn {
+  white-space: nowrap;
+}
+
+/* Sidebar Locked Alignment Logic */
+.admin-nav-link.locked {
+  cursor: not-allowed;
+  opacity: 0.5;
+  pointer-events: none;
+  background: transparent;
+}
+
+.locked-wrapper {
+  display: flex;
+  justify-content: space-between; /* Pushes content to left and lock to right */
+  align-items: center;
+  width: 100%;
+}
+
+.locked-main {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem; /* Matches your standard nav-link gap */
+}
+
+/* Custom Styled Lock Icon to match the theme */
+.admin-icon-lock {
+  width: 16px;
+  height: 16px;
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="%23cbd5e1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  margin-left: auto; /* Extra insurance for right alignment */
+}
+
+/* Ensure icons inside locked items are also grayed out */
+.admin-nav-link.locked span[class^="admin-icon-"] {
+  filter: grayscale(1);
+}
+
+/* Auth Guard UI (If you add a message to login) */
+.auth-error-msg {
+  background: #fee2e2;
+  color: #b91c1c;
+  padding: 0.75rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  font-size: 0.875rem;
+  text-align: center;
+  border: 1px solid #fecaca;
+}
+
+/* Filter Bar Styling */
+.admin-filter-bar {
+  display: flex;
+  gap: 1.5rem;
+  padding: 1.5rem;
+  background: #ffffff;
+  border-radius: 12px;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e2e8f0;
+  align-items: flex-end;
+  animation: slideDown 0.3s ease-out;
+}
+
+.small-label {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+  margin-bottom: 0.5rem;
+}
+
+.admin-input {
+  width: 100%;
+  padding: 0.625rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  transition: border-color 0.2s;
+}
+
+.admin-input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  ring: 2px solid #3b82f6;
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.status-chip-group {
+  display: flex;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.status-chip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 20px;
+  border: 2px solid #e2e8f0;
+  background: white;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #64748b;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.status-chip .dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #cbd5e1; /* Default gray dot */
+  transition: background 0.2s ease;
+}
+
+.status-chip:hover {
+  border-color: var(--chip-color);
+  background: var(--chip-bg);
+}
+
+.status-chip.active {
+  border-color: var(--chip-color);
+  background: var(--chip-bg);
+  color: var(--chip-color);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.status-chip.active .dot {
+  background: var(--chip-color);
+}
+
+/* Ensure the status section takes full width if needed */
+.admin-form-group.full-width {
+  grid-column: 1 / -1;
+}
+
+.admin-form-footer {
+  display: flex;
+  justify-content: flex-end; /* Aligns buttons to the right */
+  gap: 12px;                /* This creates the missing space between buttons */
+  margin-top: 2rem;         /* Space between the form grid and buttons */
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border-light); /* Optional: adds a clean separator */
+}
+
+/* Ensures buttons don't shrink or stretch oddly */
+.admin-btn-primary,
+.admin-btn-secondary {
+  min-width: 100px;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Filter Panel Layout Fixes */
+.admin-filter-panel {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+}
+
+/* Container for all filters */
+.filter-grid-container {
+  display: flex;
+  align-items: flex-end;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+/* Status Chip Group Styling */
+.filter-chip-group {
+  display: flex;
+  background: #f1f5f9; /* Light grey track */
+  padding: 4px;
+  border-radius: 10px;
+  gap: 4px;
+  width: fit-content;
+}
+
+.filter-chip {
+  padding: 8px 16px;
+  border: none;
+  background: transparent;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #64748b;
+  cursor: pointer;
+  border-radius: 7px;
+  transition: all 0.2s ease;
+}
+
+.filter-chip:hover {
+  color: #1e3a8a;
+}
+
+/* Active State: White background with shadow to look "pressed" */
+.filter-chip.active {
+  background: #ffffff;
+  color: #1e3a8a; /* Matches your --admin-color variable */
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e2e8f0;
+}
+
+.reset-link {
+  margin-left: auto; /* Pushes Reset to the far right */
+  background: none;
+  border: none;
+  color: #64748b;
+  font-weight: 600;
+  font-size: 0.85rem;
+  text-decoration: underline;
+  cursor: pointer;
+  padding-bottom: 10px;
+}
+
+.reset-link:hover {
+  color: #ef4444;
+}
+
+/* Responsive fix: Stack on small screens */
+@media (max-width: 1024px) {
+  .filter-grid-container {
+    grid-template-columns: 1fr 1fr;
+  }
+  .status-field, .filter-actions {
+    grid-column: span 1;
+  }
+}
+
+.filter-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 4px; /* Ensures buttons and inputs sit on the same visual baseline */
+}
+
+/* ==============================================
+   METER READING FORM SPECIFIC STYLES
+   ----------------------------------------------
+   Styles for adding new readings to existing meters
+============================================== */
+
+/* Adjusts form width for the reading page */
+.reading-card-width {
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+/* Info Box showing previous reading context */
+.reading-info-card {
+  background: #f0f7ff; /* Light blue background */
+  border-left: 4px solid #1e3a8a; /* Navy Blue border matching admin theme */
+  padding: 1.25rem;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+}
+
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+  font-size: 0.95rem;
+}
+
+.info-row:last-child {
+  margin-bottom: 0;
+}
+
+.info-row span {
+  color: #64748b; /* Muted slate text */
+  font-weight: 500;
+}
+
+.info-row strong {
+  color: #1e3a8a;
+}
+
+/* Specific styling for the read-only Meter No field */
+.readonly-input {
+  background-color: #f8fafc !important;
+  color: #94a3b8 !important;
+  cursor: not-allowed;
+  border-style: dashed !important; /* Visual cue that it cannot be edited */
+}
+
+/* Wrapper to position units (kWh/m3) inside the input */
+.input-unit-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-unit-wrapper .admin-input {
+  padding-right: 60px; /* Make space for the unit label */
+}
+
+.unit-label {
+  position: absolute;
+  right: 14px;
+  color: #94a3b8;
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  pointer-events: none; /* Prevents label from blocking clicks on input */
+}
+
+/* Footer alignment for the reading form */
+.reading-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #e2e8f0;
+}
+
+/* Ensure all form elements have identical height and alignment */
+.admin-input,
+.admin-form-group input,
+.admin-form-group select {
+  width: 100%;
+  height: 45px; /* Forced height for perfect consistency */
+  padding: 0 1rem; /* Horizontal padding only to prevent vertical expansion */
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 1rem;
+  background: white;
+  color: #1f2937;
+  display: block;
+  box-sizing: border-box; /* Crucial: includes border/padding in height calculation */
+  transition: all 0.2s ease;
+}
+
+/* Specific fix for date/select vertical alignment */
+.admin-input[type="date"],
+select.admin-input {
+  line-height: 45px;
 }

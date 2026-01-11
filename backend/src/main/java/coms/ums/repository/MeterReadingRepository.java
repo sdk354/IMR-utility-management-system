@@ -1,4 +1,4 @@
-﻿package coms.ums.repository;
+package coms.ums.repository;
 
 import coms.ums.model.MeterReading;
 import org.springframework.data.domain.Page;

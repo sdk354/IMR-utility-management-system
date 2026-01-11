@@ -1,4 +1,4 @@
-﻿package coms.ums.repository;
+package coms.ums.repository;
 
 import coms.ums.model.Role;
 import org.springframework.data.jpa.repository.JpaRepository;

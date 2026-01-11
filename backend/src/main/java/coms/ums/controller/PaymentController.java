@@ -1,6 +1,7 @@
-﻿package coms.ums.controller;
+package coms.ums.controller;
 
 import coms.ums.dto.PaymentRequestDTO;
+import coms.ums.dto.PaymentResponseDTO; // You need to create this DTO
 import coms.ums.exception.TransactionFailedException;
 import coms.ums.model.Payment;
 import coms.ums.model.User;
@@ -11,10 +12,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-import javax.validation.Valid;
+import jakarta.validation.Valid;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/payments")
+@CrossOrigin(origins = "http://localhost:3000")
 public class PaymentController {
 
     private final PaymentService paymentService;
@@ -23,10 +28,6 @@ public class PaymentController {
         this.paymentService = paymentService;
     }
 
-    /**
-     * Endpoint for an authenticated user to process a payment.
-     * Uses the PaymentRequestDTO for input.
-     */
     @PostMapping("/process")
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<?> processPayment(@Valid @RequestBody PaymentRequestDTO paymentRequest,
@@ -34,19 +35,38 @@ public class PaymentController {
         try {
             User currentUser = userPrincipal.getUser();
             Payment newPayment = paymentService.processPayment(paymentRequest, currentUser);
-
-            // Return the created payment object along with a 201 Created status
-            return ResponseEntity.status(HttpStatus.CREATED).body(newPayment);
-
-        } catch (TransactionFailedException e) {
-            // TransactionFailedException is mapped to a 400 status in its definition (@ResponseStatus)
-            return ResponseEntity.badRequest().body("Payment failed: " + e.getMessage());
-        } catch (IllegalArgumentException e) {
-            // Handle bad requests like bill already paid, invalid amount, etc.
+            return ResponseEntity.status(HttpStatus.CREATED).body(new PaymentResponseDTO(newPayment));
+        } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
-        } catch (SecurityException e) {
-            // Handle attempts to pay someone else's bill
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
         }
+    }
+
+    // NEW: Matches paymentService.getMyPayments() in React
+    @GetMapping("/my-payments")
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<List<PaymentResponseDTO>> getMyPayments(@AuthenticationPrincipal UserPrincipal userPrincipal) {
+        List<PaymentResponseDTO> payments = paymentService.getPaymentsByUserId(userPrincipal.getUser().getId())
+                .stream().map(PaymentResponseDTO::new).collect(Collectors.toList());
+        return ResponseEntity.ok(payments);
+    }
+
+    @GetMapping("/user/{userId}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'DEV')")
+    public ResponseEntity<List<PaymentResponseDTO>> getPaymentHistoryByUserId(@PathVariable Long userId) {
+        List<PaymentResponseDTO> payments = paymentService.getPaymentsByUserId(userId)
+                .stream().map(PaymentResponseDTO::new).collect(Collectors.toList());
+        return ResponseEntity.ok(payments);
+    }
+
+    @GetMapping
+    // Per your instructions: Only Admin sees all system payments.
+    // Any other role (Dev, Manager, User) uses their specific views.
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<PaymentResponseDTO>> getAllPayments() {
+        List<PaymentResponseDTO> payments = paymentService.getAllPayments()
+                .stream()
+                .map(PaymentResponseDTO::new)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(payments);
     }
 }

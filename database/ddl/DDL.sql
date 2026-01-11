@@ -29,11 +29,11 @@ CREATE TABLE Meter (
     meterID INT IDENTITY(1,1) PRIMARY KEY,
     serialNumber VARCHAR(100) NOT NULL UNIQUE,
     utilityTypeID INT NOT NULL,
-    customerID INT NULL,
+    userID INT NULL,
     installationDate DATE,
     status VARCHAR(50) DEFAULT 'Active',
     CONSTRAINT FK_Meter_UtilityType FOREIGN KEY (utilityTypeID) REFERENCES Utility_Type(utilityTypeID),
-    CONSTRAINT FK_Meter_User FOREIGN KEY (customerID) REFERENCES [User](userID)
+    CONSTRAINT FK_Meter_User FOREIGN KEY (userID) REFERENCES [User](userID)
 );
 
 CREATE TABLE Tariff (

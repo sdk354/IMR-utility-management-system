@@ -28,9 +28,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
-import javax.security.auth.Subject;
-import javax.security.auth.login.LoginException;
-import javax.security.auth.spi.LoginModule;
+import jakarta.security.auth.Subject;
+import jakarta.security.auth.login.LoginException;
+import jakarta.security.auth.spi.LoginModule;
 
 import org.ietf.jgss.GSSCredential;
 import org.ietf.jgss.GSSException;

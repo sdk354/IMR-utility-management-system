@@ -1,8 +1,7 @@
-﻿package coms.ums.model;
+package coms.ums.model;
 
 import jakarta.persistence.*;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "Meter_Reading")
@@ -17,7 +16,7 @@ public class MeterReading {
     private BigDecimal readingValue;
 
     @Column(name = "readingDate", nullable = false)
-    private LocalDateTime readingDate;
+    private String readingDate; // Using String for easy React/SQL compatibility
 
     @Column(name = "remarks", length = 255)
     private String remarks;
@@ -36,8 +35,8 @@ public class MeterReading {
     public BigDecimal getReadingValue() { return readingValue; }
     public void setReadingValue(BigDecimal readingValue) { this.readingValue = readingValue; }
 
-    public LocalDateTime getReadingDate() { return readingDate; }
-    public void setReadingDate(LocalDateTime readingDate) { this.readingDate = readingDate; }
+    public String getReadingDate() { return readingDate; }
+    public void setReadingDate(String readingDate) { this.readingDate = readingDate; }
 
     public String getRemarks() { return remarks; }
     public void setRemarks(String remarks) { this.remarks = remarks; }
