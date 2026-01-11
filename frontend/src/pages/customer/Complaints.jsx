@@ -1,101 +1,142 @@
-import { useState } from "react";
-
-const MOCK_TICKETS = [
-  { id: "TKT-001", subject: "Billing discrepancy", type: "Billing Issue", date: "2024-01-18", status: "In Progress" },
-  { id: "TKT-002", subject: "Meter reading question", type: "General Inquiry", date: "2024-01-10", status: "Resolved" },
-  { id: "TKT-003", subject: "Payment not received", type: "Payment Issue", date: "2024-01-05", status: "Resolved" },
-];
+import { useState, useEffect } from "react";
+import { complaintService } from "../../services/complaintService";
 
 function CustomerComplaints() {
-  const [form, setForm] = useState({ issueType: "", subject: "", description: "" });
+	const [tickets, setTickets] = useState([]);
+	const [loading, setLoading] = useState(true);
+	const [isSubmitting, setIsSubmitting] = useState(false);
+	const [form, setForm] = useState({ issueType: "", subject: "", description: "" });
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setForm(prev => ({ ...prev, [name]: value }));
-  };
+	useEffect(() => {
+		fetchTickets();
+	}, []);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    setForm({ issueType: "", subject: "", description: "" });
-  };
+	const fetchTickets = async () => {
+		try {
+			setLoading(true);
+			const data = await complaintService.getAllComplaints();
+			setTickets(data);
+		} catch (err) {
+			console.error("Error loading tickets:", err.message);
+		} finally {
+			setLoading(false);
+		}
+	};
 
-  return (
-    <>
-      <div className="customer-page-header">
-        <h1 className="customer-section-title">Support Tickets</h1>
-        <div className="customer-page-actions">
-          <button className="customer-btn-secondary">Export</button>
-          <button className="customer-btn-primary">Print</button>
-        </div>
-      </div>
+	const handleChange = (e) => {
+		const { name, value } = e.target;
+		setForm(prev => ({ ...prev, [name]: value }));
+	};
 
-      <div style={{ marginBottom: "2.5rem" }}>
-        <div className="customer-card">
-          <h3 style={{ marginBottom: "1.5rem", color: "#5d2e0f", borderBottom: "2px solid #f97316", paddingBottom: "0.75rem" }}>Submit Support Request</h3>
+	const handleSubmit = async (e) => {
+		e.preventDefault();
+		setIsSubmitting(true);
+		try {
+			// Send separate fields; the backend Controller handles the merging
+			const payload = {
+				type: form.issueType,
+				subject: form.subject,
+				description: form.description
+			};
+			await complaintService.createComplaint(payload);
+			alert("Ticket submitted successfully!");
+			setForm({ issueType: "", subject: "", description: "" });
+			fetchTickets();
+		} catch (err) {
+			alert(err.message);
+		} finally {
+			setIsSubmitting(false);
+		}
+	};
 
-          <form onSubmit={handleSubmit} style={{ maxWidth: "600px" }}>
-            <div className="customer-form-group">
-              <label htmlFor="issue-type">Issue Type</label>
-              <select id="issue-type" name="issueType" value={form.issueType} onChange={handleChange} className="customer-select" defaultValue="">
-                <option value="" disabled>Select issue type...</option>
-                <option>Billing Issue</option>
-                <option>Meter Reading</option>
-                <option>General Inquiry</option>
-                <option>Payment Issue</option>
-                <option>Connection Problem</option>
-              </select>
-            </div>
+	return (
+		<>
+			<div className="customer-page-header">
+				<h1 className="customer-section-title">Support Tickets</h1>
+			</div>
 
-            <div className="customer-form-group">
-              <label htmlFor="subject">Subject</label>
-              <input id="subject" type="text" name="subject" value={form.subject} onChange={handleChange} placeholder="Brief description of your issue" />
-            </div>
+			<div style={{ marginBottom: "2.5rem" }}>
+				<div className="customer-card">
+					<h3 style={{ marginBottom: "1.5rem", color: "#5d2e0f", borderBottom: "2px solid #f97316", paddingBottom: "0.75rem" }}>
+						Submit Support Request
+					</h3>
 
-            <div className="customer-form-group">
-              <label htmlFor="description">Description</label>
-              <textarea id="description" name="description" value={form.description} onChange={handleChange} placeholder="Provide detailed information about your issue" style={{ minHeight: "140px" }} ></textarea>
-            </div>
+					<form onSubmit={handleSubmit} style={{ maxWidth: "600px" }}>
+						<div className="customer-form-group">
+							<label htmlFor="issue-type">Issue Type</label>
+							<select id="issue-type" name="issueType" value={form.issueType} onChange={handleChange} className="customer-select" required>
+								<option value="" disabled>Select issue type...</option>
+								<option value="Billing Issue">Billing Issue</option>
+								<option value="Meter Reading">Meter Reading</option>
+								<option value="General Inquiry">General Inquiry</option>
+								<option value="Payment Issue">Payment Issue</option>
+								<option value="Connection Problem">Connection Problem</option>
+							</select>
+						</div>
 
-            <button type="submit" className="customer-btn-primary">Submit Request</button>
-          </form>
-        </div>
-      </div>
+						<div className="customer-form-group">
+							<label htmlFor="subject">Subject</label>
+							<input id="subject" type="text" name="subject" value={form.subject} onChange={handleChange} placeholder="Brief description" required />
+						</div>
 
-      <div>
-        <h3 style={{ marginBottom: "1.5rem", color: "#5d2e0f" }}>My Support Tickets</h3>
-        <div className="customer-table-container">
-          <table className="customer-table">
-            <thead>
-              <tr>
-                <th>Ticket ID</th>
-                <th>Subject</th>
-                <th>Type</th>
-                <th>Date</th>
-                <th>Status</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {MOCK_TICKETS && MOCK_TICKETS.length > 0 ? (
-                MOCK_TICKETS.map(t => (
-                  <tr key={t.id}>
-                    <td><strong>{t.id}</strong></td>
-                    <td>{t.subject}</td>
-                    <td>{t.type}</td>
-                    <td>{t.date}</td>
-                    <td><span className={`customer-status ${t.status === "Resolved" ? "completed" : "pending"}`}>{t.status}</span></td>
-                    <td><a href="#" className="link" style={{ color: "#f97316", fontWeight: "600" }}>View</a></td>
-                  </tr>
-                ))
-              ) : (
-                <tr><td colSpan="6" style={{ textAlign: "center", padding: "2rem", color: "#a0714f" }}>No support tickets found</td></tr>
-              )}
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </>
-  );
+						<div className="customer-form-group">
+							<label htmlFor="description">Description</label>
+							<textarea id="description" name="description" value={form.description} onChange={handleChange} placeholder="Details..." style={{ minHeight: "140px" }} required></textarea>
+						</div>
+
+						<button type="submit" className="customer-btn-primary" disabled={isSubmitting}>
+							{isSubmitting ? "Submitting..." : "Submit Request"}
+						</button>
+					</form>
+				</div>
+			</div>
+
+			<div>
+				<h3 style={{ marginBottom: "1.5rem", color: "#5d2e0f" }}>My Support Tickets</h3>
+				<div className="customer-table-container">
+					<table className="customer-table">
+						<thead>
+						<tr>
+							<th>Ticket ID</th>
+							<th>Details</th>
+							<th>Date</th>
+							<th>Status</th>
+							<th>Action</th>
+						</tr>
+						</thead>
+						<tbody>
+						{loading ? (
+							<tr><td colSpan="5" style={{ textAlign: "center", padding: "2rem" }}>Loading tickets...</td></tr>
+						) : tickets.length > 0 ? (
+							tickets.map(t => (
+								<tr key={t.id}>
+									<td><strong>TKT-{String(t.id).padStart(3, '0')}</strong></td>
+									{/* Shows the merged [Type] Subject: Description string */}
+									<td style={{ maxWidth: "350px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+										{t.complaintText}
+									</td>
+									<td>{t.complaintDate ? new Date(t.complaintDate).toLocaleDateString() : 'N/A'}</td>
+									<td>
+                                <span className={`customer-status ${t.status?.toLowerCase() === "resolved" ? "completed" : "pending"}`}>
+                                    {t.status}
+                                </span>
+									</td>
+									<td>
+										<button className="link" onClick={() => alert(t.complaintText)} style={{ background: "none", border: "none", color: "#f97316", fontWeight: "600", cursor: "pointer" }}>
+											View
+										</button>
+									</td>
+								</tr>
+							))
+						) : (
+							<tr><td colSpan="5" style={{ textAlign: "center", padding: "2rem", color: "#a0714f" }}>No support tickets found</td></tr>
+						)}
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</>
+	);
 }
 
 export default CustomerComplaints;

@@ -26,11 +26,11 @@ import java.sql.SQLException;
 import java.sql.SQLXML;
 import java.sql.Statement;
 
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.sax.SAXResult;
-import javax.xml.transform.sax.SAXSource;
-import javax.xml.transform.sax.SAXTransformerFactory;
+import jakarta.xml.transform.Transformer;
+import jakarta.xml.transform.TransformerFactory;
+import jakarta.xml.transform.sax.SAXResult;
+import jakarta.xml.transform.sax.SAXSource;
+import jakarta.xml.transform.sax.SAXTransformerFactory;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;

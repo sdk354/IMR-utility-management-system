@@ -1,7 +1,7 @@
-﻿package coms.ums.dto;
+package coms.ums.dto;
 
 // Standard imports for data validation (optional but good practice)
-import javax.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotBlank;
 
 public class LoginRequest {
 

@@ -1,98 +1,157 @@
-import { useState } from "react";
-
-const MOCK_PAYMENTS = [
-  { id: "PAY-001", date: "2024-01-18", method: "Bank Transfer", amount: 2500, status: "Completed" },
-  { id: "PAY-002", date: "2024-01-10", method: "Credit Card", amount: 2500, status: "Completed" },
-  { id: "PAY-003", date: "2024-01-05", method: "Mobile Wallet", amount: 2500, status: "Completed" },
-];
+import { useState, useEffect } from "react";
+import { paymentService } from "../../services/paymentService";
 
 function CustomerPayments() {
-  const [form, setForm] = useState({ account: "", amount: "", method: "" });
+	const [payments, setPayments] = useState([]);
+	const [loading, setLoading] = useState(true);
+	const [form, setForm] = useState({ account: "", amount: "", method: "" });
+	const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setForm(prev => ({ ...prev, [name]: value }));
-  };
+	useEffect(() => {
+		loadPayments();
+	}, []);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    setForm({ account: "", amount: "", method: "" });
-  };
+	const loadPayments = async () => {
+		try {
+			setLoading(true);
+			const data = await paymentService.getMyPayments();
+			setPayments(data);
+		} catch (err) {
+			console.error("Failed to load payments:", err.message);
+		} finally {
+			setLoading(false);
+		}
+	};
 
-  return (
-    <>
-      <div className="customer-page-header">
-        <h1 className="customer-section-title">Payments</h1>
-        <div className="customer-page-actions">
-          <button className="customer-btn-secondary">Download</button>
-          <button className="customer-btn-primary">Print History</button>
-        </div>
-      </div>
+	const handleChange = (e) => {
+		const { name, value } = e.target;
+		setForm(prev => ({ ...prev, [name]: value }));
+	};
 
-      <div style={{ marginBottom: "2.5rem" }}>
-        <div className="customer-card">
-          <h3 style={{ marginBottom: "1.5rem", color: "#5d2e0f", borderBottom: "2px solid #f97316", paddingBottom: "0.75rem" }}>Make a Payment</h3>
+	const handleSubmit = async (e) => {
+		e.preventDefault();
+		setIsSubmitting(true);
 
-          <form onSubmit={handleSubmit} style={{ maxWidth: "600px" }}>
-            <div className="customer-form-group">
-              <label>Account Number</label>
-              <input type="text" name="account" value={form.account} onChange={handleChange} placeholder="Enter account number" />
-            </div>
+		try {
+			const paymentData = {
+				billId: parseInt(form.account), // Mapping 'account' to 'billId' for the DTO
+				amount: parseFloat(form.amount),
+				paymentMethod: form.method
+			};
 
-            <div className="customer-form-group">
-              <label>Amount (Rs.)</label>
-              <input type="number" name="amount" value={form.amount} onChange={handleChange} placeholder="Enter amount" />
-            </div>
+			await paymentService.processPayment(paymentData);
 
-            <div className="customer-form-group">
-              <label>Payment Method</label>
-              <select name="method" value={form.method} onChange={handleChange} className="customer-select" defaultValue="">
-                <option value="" disabled>Select payment method...</option>
-                <option>Bank Transfer</option>
-                <option>Credit Card</option>
-                <option>Debit Card</option>
-                <option>Mobile Wallet</option>
-              </select>
-            </div>
+			alert("Payment processed successfully!");
+			setForm({ account: "", amount: "", method: "" });
+			await loadPayments();
+		} catch (err) {
+			alert(err.message);
+		} finally {
+			setIsSubmitting(false);
+		}
+	};
 
-            <button type="submit" className="customer-btn-primary" style={{ width: "100%" }}>Pay Now</button>
-          </form>
-        </div>
-      </div>
+	return (
+		<>
+			<div className="customer-page-header">
+				<h1 className="customer-section-title">Payments</h1>
+			</div>
 
-      <div>
-        <h3 style={{ marginBottom: "1.5rem", color: "#5d2e0f" }}>Payment History</h3>
-        <div className="customer-table-container">
-          <table className="customer-table">
-            <thead>
-              <tr>
-                <th>Payment ID</th>
-                <th>Date</th>
-                <th>Method</th>
-                <th>Amount</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              {MOCK_PAYMENTS && MOCK_PAYMENTS.length > 0 ? (
-                MOCK_PAYMENTS.map(p => (
-                  <tr key={p.id}>
-                    <td><strong>{p.id}</strong></td>
-                    <td>{p.date}</td>
-                    <td>{p.method}</td>
-                    <td><strong>Rs. {p.amount.toFixed(2)}</strong></td>
-                    <td><span className={`customer-status ${p.status === "Completed" ? "completed" : "pending"}`}>{p.status}</span></td>
-                  </tr>
-                ))
-              ) : (
-                <tr><td colSpan="5" style={{ textAlign: "center", padding: "2rem", color: "#a0714f" }}>No payment history found</td></tr>
-              )}
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </>
-  );
+			<div style={{ marginBottom: "2.5rem" }}>
+				<div className="customer-card">
+					<h3 style={{ marginBottom: "1.5rem", color: "#5d2e0f", borderBottom: "2px solid #f97316", paddingBottom: "0.75rem" }}>
+						Make a Payment
+					</h3>
+
+					<form onSubmit={handleSubmit} style={{ maxWidth: "600px" }}>
+						<div className="customer-form-group">
+							<label>Bill ID</label>
+							<input
+								type="text"
+								name="account"
+								value={form.account}
+								onChange={handleChange}
+								placeholder="Enter bill ID"
+								required
+							/>
+						</div>
+
+						<div className="customer-form-group">
+							<label>Amount (Rs.)</label>
+							<input
+								type="number"
+								name="amount"
+								value={form.amount}
+								onChange={handleChange}
+								placeholder="Enter amount"
+								required
+							/>
+						</div>
+
+						<div className="customer-form-group">
+							<label>Payment Method</label>
+							<select
+								name="method"
+								value={form.method}
+								onChange={handleChange}
+								className="customer-select"
+								required
+							>
+								<option value="" disabled>Select method...</option>
+								<option value="Bank Transfer">Bank Transfer</option>
+								<option value="Credit Card">Credit Card</option>
+								<option value="Debit Card">Debit Card</option>
+								<option value="Mobile Wallet">Mobile Wallet</option>
+							</select>
+						</div>
+
+						<button
+							type="submit"
+							className="customer-btn-primary"
+							style={{ width: "100%" }}
+							disabled={isSubmitting}
+						>
+							{isSubmitting ? "Processing..." : "Pay Now"}
+						</button>
+					</form>
+				</div>
+			</div>
+
+			<div>
+				<h3 style={{ marginBottom: "1.5rem", color: "#5d2e0f" }}>Payment History</h3>
+				<div className="customer-table-container">
+					<table className="customer-table">
+						<thead>
+						<tr>
+							<th>Payment ID</th>
+							<th>Receipt No</th>
+							<th>Date</th>
+							<th>Method</th>
+							<th>Amount</th>
+						</tr>
+						</thead>
+						<tbody>
+						{loading ? (
+							<tr><td colSpan="5" style={{ textAlign: "center", padding: "2rem" }}>Loading...</td></tr>
+						) : payments.length > 0 ? (
+							payments.map(p => (
+								<tr key={p.id}>
+									<td><strong>PAY-{String(p.id).padStart(3, '0')}</strong></td>
+									<td>{p.receiptNo}</td>
+									<td>{new Date(p.paymentDate).toLocaleDateString()}</td>
+									<td>{p.paymentMethod}</td>
+									<td><strong>Rs. {parseFloat(p.amount).toFixed(2)}</strong></td>
+								</tr>
+							))
+						) : (
+							<tr><td colSpan="5" style={{ textAlign: "center", padding: "2rem", color: "#a0714f" }}>No payments found</td></tr>
+						)}
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</>
+	);
 }
 
 export default CustomerPayments;

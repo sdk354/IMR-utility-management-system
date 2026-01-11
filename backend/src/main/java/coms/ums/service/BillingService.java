@@ -1,4 +1,4 @@
-﻿package coms.ums.service;
+package coms.ums.service;
 
 import coms.ums.model.Bill;
 import coms.ums.model.User;
@@ -13,36 +13,24 @@ public class BillingService {
 
     private final BillRepository billRepository;
 
-
     public BillingService(BillRepository billRepository) {
         this.billRepository = billRepository;
     }
 
-    /**
-     * Finds a bill by its ID.
-     */
     public Optional<Bill> getBillById(Long billId) {
         return billRepository.findById(billId);
     }
 
-    /**
-     * Retrieves all bills for a specific user, ordered by issue date.
-     */
     public List<Bill> getBillsByUser(User user) {
+        // FIXED: Changed to IssuedDate to match the Repository and Model
         return billRepository.findByUserOrderByIssuedDateDesc(user);
     }
 
-    /**
-     * Administrator function to generate and save a new bill.
-     */
     @Transactional
     public Bill createNewBill(Bill bill) {
-        // Here you might add complex logic for calculating meter readings,
-        // applying tariffs, etc.
         if (bill.getIssuedDate() == null) {
             bill.setIssuedDate(java.time.LocalDate.now());
         }
-        bill.setPaid(false); // Ensure the bill is marked unpaid upon creation
         return billRepository.save(bill);
     }
     public void generateMonthlyBills() {
@@ -50,3 +38,31 @@ public class BillingService {
         billRepository.triggerBillGenerationProcedure();
     }
 
+    @Transactional
+    public void markBillAsPaid(Long billId) {
+        Bill bill = billRepository.findById(billId)
+                .orElseThrow(() -> new IllegalArgumentException("Bill not found"));
+        bill.setStatus("Paid");
+        billRepository.save(bill);
+    }
+
+    public List<Bill> getAllBills() {
+        return billRepository.findAll();
+    }
+
+    @Transactional
+    public Bill updateBill(Long id, Bill billDetails) {
+        Bill existingBill = billRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Bill not found"));
+
+        existingBill.setTotalAmount(billDetails.getTotalAmount());
+        existingBill.setTotalConsumption(billDetails.getTotalConsumption());
+        existingBill.setBillingPeriodStart(billDetails.getBillingPeriodStart());
+        existingBill.setBillingPeriodEnd(billDetails.getBillingPeriodEnd());
+        existingBill.setDueDate(billDetails.getDueDate());
+        existingBill.setStatus(billDetails.getStatus());
+        existingBill.setUser(billDetails.getUser());
+
+        return billRepository.save(existingBill);
+    }
+}

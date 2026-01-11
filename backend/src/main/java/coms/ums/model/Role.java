@@ -1,9 +1,9 @@
-﻿package coms.ums.model;
+package coms.ums.model;
 
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "[Role]")
+@Table(name = "Role")
 public class Role {
 
     @Id

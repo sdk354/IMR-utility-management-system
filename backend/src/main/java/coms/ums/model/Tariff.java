@@ -1,4 +1,4 @@
-﻿package coms.ums.model;
+package coms.ums.model;
 
 import jakarta.persistence.*;
 import java.math.BigDecimal;

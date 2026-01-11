@@ -1,4 +1,4 @@
-﻿package coms.ums.dto;
+package coms.ums.dto;
 
 import java.math.BigDecimal;
 

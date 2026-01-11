@@ -1,4 +1,4 @@
-﻿package coms.ums.model;
+package coms.ums.model;
 
 import jakarta.persistence.*;
 import java.time.LocalDate;
@@ -9,30 +9,41 @@ public class Meter {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "MeterID")
+    @Column(name = "meterID") // Matches your DB screenshot
     private Long id;
 
-    @Column(name = "SerialNumber", nullable = false, unique = true, length = 100)
+    @Column(name = "serialNumber", nullable = false, unique = true, length = 100)
     private String serialNumber;
 
-    @Column(name = "UtilityTypeID", nullable = false)
+    @Column(name = "utilityTypeID", nullable = false)
     private Integer utilityTypeId;
 
-    @Column(name = "InstallationDate")
+    @Column(name = "installationDate")
     private LocalDate installationDate;
 
-    @Column(name = "Status", length = 50)
+    @Column(name = "status", length = 50)
     private String status;
 
-    // getters and setters
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "customerID", referencedColumnName = "userID")
+    private User customer;
+
+    // --- Getters and Setters ---
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
+
     public String getSerialNumber() { return serialNumber; }
     public void setSerialNumber(String serialNumber) { this.serialNumber = serialNumber; }
+
     public Integer getUtilityTypeId() { return utilityTypeId; }
     public void setUtilityTypeId(Integer utilityTypeId) { this.utilityTypeId = utilityTypeId; }
+
     public LocalDate getInstallationDate() { return installationDate; }
     public void setInstallationDate(LocalDate installationDate) { this.installationDate = installationDate; }
+
     public String getStatus() { return status; }
     public void setStatus(String status) { this.status = status; }
+
+    public User getCustomer() { return customer; }
+    public void setCustomer(User customer) { this.customer = customer; }
 }

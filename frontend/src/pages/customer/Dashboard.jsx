@@ -1,198 +1,176 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import CustomerPayments from "./Payments";
-import CustomerComplaints from "./Complaints";
-import Profile from "./Profile";
+import { customerService } from "../../services/customerService";
 
 function Dashboard() {
-	const [view] = useState("home");
+	const [stats, setStats] = useState({
+		lastBillAmount: 0,
+		dueDate: "N/A",
+		consumptionTrend: [],
+		currentUsage: 0,
+		accountStatus: "Loading..."
+	});
+	const [bills, setBills] = useState([]); // State for the bills table
+	const [loading, setLoading] = useState(true);
 	const navigate = useNavigate();
 
-	// Define theme colors for easy consistency
+	useEffect(() => {
+		const loadDashboardData = async () => {
+			try {
+				setLoading(true);
+				// Fetch summary stats and billing history in parallel
+				const [statsData, billsData] = await Promise.all([
+					customerService.getDashboardStats(),
+					customerService.getBills()
+				]);
+
+				setStats(statsData);
+				setBills(billsData);
+			} catch (err) {
+				console.error("Error loading customer data", err);
+			} finally {
+				setLoading(false);
+			}
+		};
+		loadDashboardData();
+	}, []);
+
 	const colors = {
-		primary: "#800000",      // Maroon
-		primaryDark: "#4a0404",  // Darker Maroon
-		bgLight: "#f2d4d4",      // Light Pink/Maroon for icon backgrounds
-		textMuted: "#994d4d",    // Muted Maroon for labels
+		primary: "#800000",
+		primaryDark: "#4a0404",
+		bgLight: "#f2d4d4",
+		textMuted: "#994d4d",
 	};
 
 	return (
 		<div>
-			{view === "home" && (
-				<>
-					<div className="customer-page-header">
-						<h1 className="customer-section-title">Dashboard</h1>
+			<div className="customer-page-header">
+				<h1 className="customer-section-title">Dashboard</h1>
+			</div>
+
+			{/* Welcome Banner */}
+			<div style={{
+				background: colors.primary,
+				padding: "2rem",
+				borderRadius: "12px",
+				color: "white",
+				marginBottom: "2rem"
+			}} className="customer-welcome-banner">
+				<h2 style={{ marginBottom: "1.5rem" }}>Welcome back!</h2>
+				<div style={{ display: "flex", gap: "1rem", flexWrap: "wrap" }}>
+					<button
+						onClick={() => navigate("/customer/bills")}
+						style={{ background: "white", color: colors.primary, border: "none", padding: "0.5rem 1rem", borderRadius: "6px", fontWeight: "bold", cursor: "pointer" }}
+					>
+						View Bills
+					</button>
+					<button
+						onClick={() => navigate("/customer/payment")}
+						style={{ background: "white", color: colors.primary, border: "none", padding: "0.5rem 1rem", borderRadius: "6px", fontWeight: "bold", cursor: "pointer" }}
+					>
+						Make Payment
+					</button>
+				</div>
+			</div>
+
+			<div className="customer-dashboard-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))", gap: "1.5rem" }}>
+				{/* Card 1: Usage */}
+				<div className="customer-summary-card" style={{ background: "white", padding: "1.5rem", borderRadius: "12px", display: "flex", alignItems: "center", gap: "1rem", boxShadow: "0 2px 4px rgba(0,0,0,0.05)" }}>
+					<div className="customer-summary-icon" style={{ background: colors.bgLight, width: "50px", height: "50px", borderRadius: "10px", display: "flex", alignItems: "center", justifyContent: "center" }}>
+						<span style={{ fontSize: "1.5rem", color: colors.primary }}>⚡</span>
 					</div>
-
-					{/* Welcome Banner - Updated to Maroon */}
-					<div style={{
-						background: colors.primary,
-						padding: "2rem",
-						borderRadius: "12px",
-						color: "white",
-						marginBottom: "2rem",
-						boxShadow: "0 4px 12px rgba(128, 0, 0, 0.15)"
-					}} className="customer-welcome-banner">
-						<h2 style={{ marginBottom: "1.5rem" }}>Welcome back!</h2>
-
-						<div style={{
-							display: "flex",
-							gap: "1rem",
-							flexWrap: "wrap"
-						}}>
-							<button
-								onClick={() => navigate("/customer/bills")}
-								className="customer-btn-primary"
-								style={{ background: "white", color: colors.primary, fontWeight: "bold" }}
-							>
-								View Bills
-							</button>
-							<button
-								onClick={() => navigate("/customer/payment")}
-								className="customer-btn-primary"
-								style={{ background: "white", color: colors.primary, fontWeight: "bold" }}
-							>
-								Make Payment
-							</button>
-							<button
-								onClick={() => navigate("/customer/support")}
-								className="customer-btn-primary"
-								style={{ background: "white", color: colors.primary, fontWeight: "bold" }}
-							>
-								Get Support
-							</button>
+					<div className="admin-summary-text-wrapper">
+						<div className="customer-summary-title" style={{ color: colors.textMuted, fontSize: "0.85rem" }}>Current Usage</div>
+						<div className="customer-summary-value" style={{ color: colors.primaryDark, fontSize: "1.25rem", fontWeight: "bold" }}>
+							{loading ? "..." : `${stats.currentUsage} kWh`}
 						</div>
 					</div>
+				</div>
 
-					{/* Stats Cards */}
-					<div className="customer-dashboard-grid">
-						<div className="customer-summary-card">
-							<div className="customer-summary-icon" style={{ background: colors.bgLight }}>
-								<span style={{ fontSize: "1.5rem", color: colors.primary }}>⚡</span>
-							</div>
-							<div>
-								<div className="customer-summary-title" style={{ color: colors.textMuted }}>Current Month Usage</div>
-								<div className="customer-summary-value" style={{ color: colors.primaryDark }}>456 kWh</div>
-								<div className="customer-summary-change up">↑ 8% from last month</div>
-							</div>
+				{/* Card 2: Last Bill */}
+				<div className="customer-summary-card" style={{ background: "white", padding: "1.5rem", borderRadius: "12px", display: "flex", alignItems: "center", gap: "1rem", boxShadow: "0 2px 4px rgba(0,0,0,0.05)" }}>
+					<div className="customer-summary-icon" style={{ background: colors.bgLight, width: "50px", height: "50px", borderRadius: "10px", display: "flex", alignItems: "center", justifyContent: "center" }}>
+						<span style={{ fontSize: "1.5rem", color: colors.primary }}>💳</span>
+					</div>
+					<div className="admin-summary-text-wrapper">
+						<div className="customer-summary-title" style={{ color: colors.textMuted, fontSize: "0.85rem" }}>Last Bill Amount</div>
+						<div className="customer-summary-value" style={{ color: colors.primaryDark, fontSize: "1.25rem", fontWeight: "bold" }}>
+							Rs. {loading ? "..." : stats.lastBillAmount.toLocaleString()}
 						</div>
-
-						<div className="customer-summary-card">
-							<div className="customer-summary-icon" style={{ background: colors.bgLight }}>
-								<span style={{ fontSize: "1.5rem", color: colors.primary }}>💳</span>
-							</div>
-							<div>
-								<div className="customer-summary-title" style={{ color: colors.textMuted }}>Last Bill Amount</div>
-								<div className="customer-summary-value" style={{ color: colors.primaryDark }}>Rs. 24,500</div>
-								{/* Changed "Due" color to a dark red/brown instead of orange */}
-								<div className="customer-summary-change" style={{ color: "#7f1d1d" }}>Due: Feb 15</div>
-							</div>
-						</div>
-
-						<div className="customer-summary-card">
-							<div className="customer-summary-icon" style={{ background: colors.bgLight }}>
-								<span style={{ fontSize: "1.5rem", color: colors.primary }}>📊</span>
-							</div>
-							<div>
-								<div className="customer-summary-title" style={{ color: colors.textMuted }}>Average Daily Usage</div>
-								<div className="customer-summary-value" style={{ color: colors.primaryDark }}>15.2 kWh</div>
-								<div className="customer-summary-change" style={{ color: "#6b7280" }}>Per day</div>
-							</div>
-						</div>
-
-						<div className="customer-summary-card">
-							<div className="customer-summary-icon" style={{ background: "#d1fae5" }}>
-								<span style={{ fontSize: "1.5rem", color: "#065f46" }}>✓</span>
-							</div>
-							<div>
-								<div className="customer-summary-title" style={{ color: colors.textMuted }}>Account Status</div>
-								<div className="customer-summary-value" style={{ color: colors.primaryDark }}>Active</div>
-								<div className="customer-summary-change up">All payments up to date</div>
-							</div>
+						<div className="customer-summary-change" style={{ color: "#7f1d1d", fontSize: "0.8rem" }}>
+							Due: {stats.dueDate}
 						</div>
 					</div>
+				</div>
 
-					{/* Graph Section */}
-					<div className="customer-card" style={{ marginTop: "2rem" }}>
-						<h3 style={{ marginBottom: "1.5rem", color: colors.primaryDark }}>Monthly Consumption Trend</h3>
-						<div style={{
-							display: "flex",
-							alignItems: "flex-end",
-							gap: "12px",
-							height: "300px",
-							paddingBottom: "1rem",
-							overflow: "auto"
-						}}>
-							{[
-								220, 250, 230, 260, 245, 270, 255, 265, 240, 250, 245, 255
-							].map((height, i) => (
-								<div key={i} style={{ textAlign: "center", flex: 1, minWidth: "30px" }}>
-									<div
-										style={{
-											height: `${height}px`,
-											background: colors.primary, // Maroon bars
-											borderRadius: "5px 5px 0 0",
-											margin: "0 auto",
-											width: "80%",
-											maxWidth: "40px",
-											opacity: 0.9,
-											transition: "opacity 0.2s"
-										}}
-										onMouseOver={(e) => e.target.style.opacity = 1}
-										onMouseOut={(e) => e.target.style.opacity = 0.9}
-									></div>
-									<span style={{ fontSize: "0.75rem", color: colors.textMuted, marginTop: "0.5rem", display: "block" }}>
-                    {["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"][i]}
-                  </span>
-								</div>
-							))}
+				{/* Card 3: Account Status */}
+				<div className="customer-summary-card" style={{ background: "white", padding: "1.5rem", borderRadius: "12px", display: "flex", alignItems: "center", gap: "1rem", boxShadow: "0 2px 4px rgba(0,0,0,0.05)" }}>
+					<div className="customer-summary-icon" style={{ background: "#d1fae5", width: "50px", height: "50px", borderRadius: "10px", display: "flex", alignItems: "center", justifyContent: "center" }}>
+						<span style={{ fontSize: "1.5rem", color: "#065f46" }}>✓</span>
+					</div>
+					<div className="admin-summary-text-wrapper">
+						<div className="customer-summary-title" style={{ color: colors.textMuted, fontSize: "0.85rem" }}>Account Status</div>
+						<div className="customer-summary-value" style={{ color: colors.primaryDark, fontSize: "1.25rem", fontWeight: "bold" }}>
+							{loading ? "..." : stats.accountStatus}
 						</div>
 					</div>
-				</>
-			)}
+				</div>
+			</div>
 
-			{view === "payment" && <CustomerPayments />}
-			{view === "support" && <CustomerComplaints />}
-			{view === "profile" && <Profile />}
+			{/* Consumption Graph */}
+			<div className="customer-card" style={{ marginTop: "2rem", background: "white", padding: "1.5rem", borderRadius: "12px" }}>
+				<h3 style={{ color: colors.primaryDark, marginBottom: "1.5rem" }}>Monthly Consumption Trend</h3>
+				<div className="graph-container" style={{ display: "flex", alignItems: "flex-end", height: "200px", gap: "12px" }}>
+					{stats.consumptionTrend && stats.consumptionTrend.map((usage, i) => (
+						<div key={i} style={{ flex: 1, textAlign: "center" }}>
+							<div style={{
+								height: `${(usage / 600) * 100}%`, // Normalized to 600kWh max
+								background: colors.primary,
+								borderRadius: "4px 4px 0 0",
+								transition: "height 0.3s ease"
+							}} title={`${usage} kWh`}></div>
+							<span style={{ fontSize: "0.7rem", color: colors.textMuted }}>M{i+1}</span>
+						</div>
+					))}
+				</div>
+			</div>
 
-			{view === "bills" && (
-				<>
-					<h2 className="customer-section-title">My Bills</h2>
-					<div className="customer-table-container">
-						<table className="customer-table">
-							<thead>
-							<tr>
-								<th>Bill ID</th>
-								<th>Period</th>
-								<th>Amount</th>
-								<th>Due Date</th>
-								<th>Status</th>
-							</tr>
-							</thead>
-							<tbody>
-							<tr>
-								<td>BILL-001</td>
-								<td>Jan 2024</td>
-								<td>Rs. 24,500</td>
-								<td>2024-02-15</td>
-								<td>
-									<span className="customer-status pending">Due</span>
+			{/* Real Bills Table */}
+			<div className="customer-card" style={{ marginTop: "2rem", background: "white", padding: "1.5rem", borderRadius: "12px" }}>
+				<h3 style={{ color: colors.primaryDark, marginBottom: "1.5rem" }}>Recent Bills</h3>
+				<div className="customer-table-container" style={{ overflowX: "auto" }}>
+					<table className="customer-table" style={{ width: "100%", borderCollapse: "collapse" }}>
+						<thead>
+						<tr style={{ textAlign: "left", borderBottom: "1px solid #eee" }}>
+							<th style={{ padding: "1rem" }}>Bill ID</th>
+							<th style={{ padding: "1rem" }}>Date</th>
+							<th style={{ padding: "1rem" }}>Amount</th>
+							<th style={{ padding: "1rem" }}>Status</th>
+						</tr>
+						</thead>
+						<tbody>
+						{bills.map((bill) => (
+							<tr key={bill.id} style={{ borderBottom: "1px solid #fafafa" }}>
+								<td style={{ padding: "1rem" }}>#{bill.id}</td>
+								<td style={{ padding: "1rem" }}>{bill.billDate || bill.issuedDate}</td>
+								<td style={{ padding: "1rem" }}>Rs. {bill.totalAmount.toLocaleString()}</td>
+								<td style={{ padding: "1rem" }}>
+                               <span style={{
+								   padding: "4px 8px",
+								   borderRadius: "4px",
+								   fontSize: "0.8rem",
+								   background: bill.status === "Paid" ? "#d1fae5" : "#fee2e2",
+								   color: bill.status === "Paid" ? "#065f46" : "#991b1b"
+							   }}>
+                                  {bill.status}
+                               </span>
 								</td>
 							</tr>
-							<tr>
-								<td>BILL-002</td>
-								<td>Dec 2023</td>
-								<td>Rs. 22,100</td>
-								<td>2024-01-15</td>
-								<td>
-									<span className="customer-status completed">Paid</span>
-								</td>
-							</tr>
-							</tbody>
-						</table>
-					</div>
-				</>
-			)}
+						))}
+						</tbody>
+					</table>
+				</div>
+			</div>
 		</div>
 	);
 }

@@ -1,4 +1,4 @@
-﻿package coms.ums.dto;
+package coms.ums.dto;
 
 public class ImportRowResult {
     private int row;

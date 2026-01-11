@@ -6,27 +6,22 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-@Service // Mark as a Spring service component
+@Service
 public class UserDetailsServiceImpl implements UserDetailsService {
 
     private final UserRepository userRepository;
 
-    // Inject UserRepository using constructor injection
     public UserDetailsServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
-    /**
-     * Loads a user from the database given a username,
-     * and returns a UserDetails object (our UserPrincipal).
-     */
     @Override
+    @Transactional(readOnly = true) // Ensures session is open for lazy loading roles if needed
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-
-        // Use the repository method we defined earlier
         return userRepository.findByUsername(username)
-                .map(UserPrincipal::new) // Map the User entity to our UserPrincipal
+                .map(UserPrincipal::new)
                 .orElseThrow(() ->
                         new UsernameNotFoundException("User not found with username: " + username)
                 );

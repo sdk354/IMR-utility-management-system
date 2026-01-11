@@ -1,64 +1,159 @@
-import { useState } from "react";
-import { MOCK_PROFILE } from "../../data/mock";
-import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { customerService } from "../../services/customerService";
 
 export default function Profile() {
-  const [form, setForm] = useState({ ...MOCK_PROFILE });
-  const [saved, setSaved] = useState(false);
+	// Initializing state with empty strings to prevent controlled/uncontrolled input warnings
+	const [form, setForm] = useState({ name: "", email: "", phone: "", address: "", username: "" });
+	const [loading, setLoading] = useState(true);
+	const [isSubmitting, setIsSubmitting] = useState(false);
+	const [message, setMessage] = useState("");
 
-  const handleChange = (k) => (e) => {
-    setForm(prev => ({ ...prev, [k]: e.target.value }));
-    setSaved(false);
-  };
+	useEffect(() => {
+		const loadProfile = async () => {
+			try {
+				const data = await customerService.getProfile();
+				// Map backend fields to frontend form fields
+				setForm({
+					name: data.username || "", // If you don't have a 'name' field, use username
+					username: data.username || "",
+					email: data.email || "",
+					phone: data.contactNo || "", // Map backend contactNo to phone
+					address: data.street || ""    // Map backend street to address
+				});
+			} catch (err) {
+				console.error("Failed to load profile", err);
+			} finally {
+				setLoading(false);
+			}
+		};
+		loadProfile();
+	}, []);
 
-  const handleSave = (e) => {
-    e.preventDefault();
-    setSaved(true);
-    setTimeout(() => setSaved(false), 2000);
-  };
+	const handleChange = (e) => {
+		const { name, value } = e.target;
+		let updatedForm = { ...form, [name]: value };
 
-  return (
-    <>
-      <div className="customer-page-header">
-        <h1 className="customer-section-title">My Profile</h1>
-        <div className="customer-page-actions">
-          <Link to="/customer/profile/password" className="customer-btn-secondary">Change Password</Link>
-          <button className="customer-btn-primary" onClick={handleSave}>Save Changes</button>
-        </div>
-      </div>
+		if (name === "name") {
+			updatedForm.username = value
+				.toLowerCase()
+				.trim()
+				.replace(/\s+/g, '_');
+		}
 
-      <div style={{ maxWidth: "700px" }}>
-        <div className="customer-card">
-          <h3 style={{ marginBottom: "1.5rem", color: "#5d2e0f", borderBottom: "2px solid #f97316", paddingBottom: "0.75rem" }}>Personal Information</h3>
-          <form onSubmit={handleSave}>
-            <div className="customer-form-group">
-              <label>Name</label>
-              <input value={form.name} onChange={handleChange("name")} />
-            </div>
+		setForm(updatedForm);
+		setMessage("");
+	};
 
-            <div className="customer-form-group">
-              <label>Email</label>
-              <input value={form.email} onChange={handleChange("email")} type="email" />
-            </div>
+	const handleSave = async (e) => {
+		e.preventDefault();
+		setIsSubmitting(true);
+		try {
+			// IMPORTANT: Only send primitive fields. Do NOT send the whole 'form' if it has nested objects.
+			const cleanPayload = {
+				username: form.username,
+				email: form.email,
+				phone: form.phone,
+				address: form.address
+			};
 
-            <div className="customer-form-group">
-              <label>Phone</label>
-              <input value={form.phone} onChange={handleChange("phone")} />
-            </div>
+			await customerService.updateProfile(cleanPayload);
+			setMessage("✓ Changes saved successfully");
+			setTimeout(() => setMessage(""), 3000);
+		} catch (err) {
+			alert("Failed to save: " + err.message);
+		} finally {
+			setIsSubmitting(false);
+		}
+	};
 
-            <div className="customer-form-group">
-              <label>Address</label>
-              <textarea value={form.address} onChange={handleChange("address")} style={{ minHeight: "100px" }} />
-            </div>
+	if (loading) return <div className="customer-card">Loading profile...</div>;
 
-            {saved && (
-              <div className="small" style={{ color: "#059669", fontWeight: "600", marginTop: "1rem" }}>
-                ✓ Changes saved
-              </div>
-            )}
-          </form>
-        </div>
-      </div>
-    </>
-  );
+	return (
+		<>
+			<div className="customer-page-header">
+				<h1 className="customer-section-title">My Profile</h1>
+			</div>
+
+			<div style={{ maxWidth: "700px" }}>
+				<div className="customer-card">
+					<h3 style={{ marginBottom: "1.5rem", color: "#5d2e0f", borderBottom: "2px solid #f97316", paddingBottom: "0.75rem" }}>
+						Personal Information
+					</h3>
+
+					<form onSubmit={handleSave}>
+						<div className="customer-form-group">
+							<label>Full Name</label>
+							<input
+								name="name"
+								value={form.name}
+								onChange={handleChange}
+								placeholder="e.g. Henry Smith"
+							/>
+						</div>
+
+						<div className="customer-form-group">
+							<label>Username (Auto-generated)</label>
+							<input
+								value={form.username}
+								readOnly
+								style={{ backgroundColor: "#f9fafb", color: "#6b7280", cursor: "not-allowed" }}
+							/>
+						</div>
+
+						<div className="customer-form-group">
+							<label>Email Address</label>
+							<input
+								name="email"
+								type="email"
+								value={form.email}
+								onChange={handleChange}
+							/>
+						</div>
+
+						<div className="customer-form-group">
+							<label>Phone Number</label>
+							<input
+								name="phone"
+								value={form.phone}
+								onChange={handleChange}
+							/>
+						</div>
+
+						<div className="customer-form-group">
+							<label>Home Address</label>
+							<textarea
+								name="address"
+								value={form.address}
+								onChange={handleChange}
+								style={{ minHeight: "100px" }}
+							/>
+						</div>
+
+						{message && (
+							<div className="small" style={{ color: "#059669", fontWeight: "600", marginBottom: "1rem" }}>
+								{message}
+							</div>
+						)}
+
+						<div style={{ display: "flex", gap: "1rem", marginTop: "2rem", borderTop: "1px solid #eee", paddingTop: "1.5rem" }}>
+							<button
+								type="submit"
+								className="customer-btn-primary"
+								disabled={isSubmitting}
+							>
+								{isSubmitting ? "Saving..." : "Save Changes"}
+							</button>
+							<button
+								type="button"
+								className="customer-btn-secondary"
+								onClick={() => window.location.reload()}
+							>
+								Cancel
+							</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</>
+	);
 }

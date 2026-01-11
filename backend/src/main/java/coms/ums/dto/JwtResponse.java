@@ -1,14 +1,12 @@
 package coms.ums.dto;
 
 public class JwtResponse {
-
     private String token;
-    private String type = "Bearer"; // Standard token type
+    private String type = "Bearer";
     private Long id;
     private String username;
     private String role;
 
-    // Constructor for successful login
     public JwtResponse(String accessToken, Long id, String username, String role) {
         this.token = accessToken;
         this.id = id;
@@ -16,22 +14,16 @@ public class JwtResponse {
         this.role = role;
     }
 
-    // Getters and Setters (only for token and type are shown for brevity)
-    public String getToken() {
-        return token;
-    }
+    // Jackson needs these Getters to include the data in the JSON response
+    public String getToken() { return token; }
+    public String getType() { return type; }
+    public Long getId() { return id; }
+    public String getUsername() { return username; }
+    public String getRole() { return role; }
 
-    public void setToken(String token) {
-        this.token = token;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    // Add getters/setters for id, username, and role here...
+    // Setters (Optional, but good for consistency)
+    public void setToken(String token) { this.token = token; }
+    public void setId(Long id) { this.id = id; }
+    public void setUsername(String username) { this.username = username; }
+    public void setRole(String role) { this.role = role; }
 }
