@@ -1,8 +1,8 @@
-INSERT INTO Utility_Type (utilityName, description)
+INSERT INTO Utility_Type (utilityName, unit, description)
 VALUES
-    ('Electricity', 'Electricity utility service'),
-    ('Water', 'Water supply service'),
-    ('Gas', 'Gas utility service');
+    ('Electricity', 'kWh', 'Electricity utility service'),
+    ('Water', 'm³', 'Water supply service'),
+    ('Gas', 'm³', 'Gas utility service');
 
 INSERT INTO Role (roleName, description)
 VALUES

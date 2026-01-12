@@ -175,26 +175,6 @@ function Dashboard() {
 			</div>
 		</div>
 
-
-		<div className="customer-card"
-			 style={{marginTop: "2rem", background: "white", padding: "1.5rem", borderRadius: "12px"}}>
-			<h3 style={{color: colors.primaryDark, marginBottom: "1.5rem"}}>Monthly Consumption Trend</h3>
-			<div className="graph-container"
-				 style={{display: "flex", alignItems: "flex-end", height: "200px", gap: "12px"}}>
-				{stats.consumptionTrend && stats.consumptionTrend.map((usage, i) => (
-					<div key={i} style={{flex: 1, textAlign: "center"}}>
-						<div style={{
-							height: `${(usage / 600) * 100}%`,
-							background: colors.primary,
-							borderRadius: "4px 4px 0 0",
-							transition: "height 0.3s ease"
-						}} title={`${usage} kWh`}></div>
-						<span style={{fontSize: "0.7rem", color: colors.textMuted}}>M{i + 1}</span>
-					</div>))}
-			</div>
-		</div>
-
-
 		<div className="customer-card"
 			 style={{marginTop: "2rem", background: "white", padding: "1.5rem", borderRadius: "12px"}}>
 			<h3 style={{color: colors.primaryDark, marginBottom: "1.5rem"}}>Recent Bills</h3>
